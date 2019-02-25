@@ -36,11 +36,10 @@ public class LightHouseSimulator extends Canvas {
 	public LightHouseSimulator() {
 		super();
 		try {
-			BackgroundImage = ImageIO
-					.read(new File(getClass().getResource("/lightHouseSimulator/background.png").getFile()));
-			redOverlay = ImageIO.read(new File(getClass().getResource("/lightHouseSimulator/red.png").getFile()));
-			greenOverlay = ImageIO.read(new File(getClass().getResource("/lightHouseSimulator/green.png").getFile()));
-			blueOverlay = ImageIO.read(new File(getClass().getResource("/lightHouseSimulator/blue.png").getFile()));
+			BackgroundImage = ImageIO.read(new File(getClass().getResource("background.png").getFile()));
+			redOverlay = ImageIO.read(new File(getClass().getResource("red.png").getFile()));
+			greenOverlay = ImageIO.read(new File(getClass().getResource("green.png").getFile()));
+			blueOverlay = ImageIO.read(new File(getClass().getResource("blue.png").getFile()));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
