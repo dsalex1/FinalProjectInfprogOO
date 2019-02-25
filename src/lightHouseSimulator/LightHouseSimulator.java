@@ -34,7 +34,6 @@ public class LightHouseSimulator extends Canvas {
 			greenOverlay = ImageIO.read(new File(getClass().getResource("/lightHouseSimulator/green.png").getFile()));
 			blueOverlay = ImageIO.read(new File(getClass().getResource("/lightHouseSimulator/blue.png").getFile()));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		frame = new JFrame();
@@ -156,5 +155,5 @@ public class LightHouseSimulator extends Canvas {
 	public void setDirectMode() {
 		mode = Mapping.DOWN_SAMPLING_WITH_GAPS;
 	}
-	
+
 }
