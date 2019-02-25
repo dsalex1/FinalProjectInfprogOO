@@ -118,7 +118,7 @@ public class LightHouseSimulator extends Canvas {
 	}
 
 	private void setMappedData(BufferedImage data) {
-		BufferedImage scaledData = resize(data, 14 * (windowHeight + gapHeight) - gapHeight, 28);
+		BufferedImage scaledData = resize(data, 28, 14 * (windowHeight + gapHeight) - gapHeight);
 		for (int x = 0; x < 28; x++)
 			for (int y = 0; y < 14; y++) {
 				int rSum = 0;
@@ -139,7 +139,7 @@ public class LightHouseSimulator extends Canvas {
 
 	}
 
-	private static BufferedImage resize(BufferedImage img, int height, int width) {
+	private static BufferedImage resize(BufferedImage img, int width, int height) {
 		Image tmp = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
 		BufferedImage resized = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2d = resized.createGraphics();
