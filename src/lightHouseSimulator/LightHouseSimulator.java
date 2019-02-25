@@ -156,5 +156,5 @@ public class LightHouseSimulator extends Canvas {
 	public void setDirectMode() {
 		mode = Mapping.DOWN_SAMPLING_WITH_GAPS;
 	}
-
+	
 }
