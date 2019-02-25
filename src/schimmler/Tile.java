@@ -50,13 +50,13 @@ public abstract class Tile {
 		return y;
 	}
 	
+	
 	/**
-	 * Return whether this tile can move to the given coordinates from the current position given a level.
-	 * @param level the level the tile is currently in.
-	 * @param newX the new x position.
-	 * @param newY the new y position.
-	 * @return returns if the field at newX and newY is reachable and free.
+	 * Return whether a given position is taken up by this tile.
+	 * @param cx the x position to check.
+	 * @param cy the y position to check.
+	 * @return whether this tile is at the given position.
 	 */
-	public abstract boolean canMoveTo(Level level, int newX, int newY);
+	public abstract boolean fieldOccupied(int cx, int cy);
 	
 }

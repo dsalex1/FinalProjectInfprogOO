@@ -3,6 +3,7 @@ package schimmler;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 /** A level containing given tiles that are movable to reach a win condition. */
 public abstract class Level {
@@ -87,6 +88,19 @@ public abstract class Level {
 		return !(x < 0 || y < 0 || width >= x || height >= y);
 	}
 	
+	/**
+	 * Return the identifier of the field that occupies the given x and y position (null if the field is free).
+	 * @param x the x position of the field to check.
+	 * @param y the y position of the field to check.
+	 * @return the found fields identifer or null if it is free.
+	 */
+	public String fieldOccupied(int x, int y) {
+		for(Entry<String, Tile> t:tiles.entrySet()) {
+			if(t.getValue().fieldOccupied(x, y))
+				return t.getKey();
+		}
+		return null;
+	}
 	
 	
 	/**
