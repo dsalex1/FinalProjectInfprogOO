@@ -2,7 +2,6 @@ package schimmler.game;
 
 import schimmler.architecture.Level;
 import schimmler.architecture.Model;
-import schimmler.architecture.Tile;
 
 public class SchimmlerModel extends Model {
 
@@ -15,25 +14,48 @@ public class SchimmlerModel extends Model {
 		setLevel(new Level() {
 			@Override
 			public void init() {
-				this.width = 3;
-				this.height = 3;
-				this.addTile("square", new Tile(1, 1) {
+				this.width = 4;
+				this.height = 6;
+				this.addTile("square", new MatrixTile(1, 1) {
 					@Override
-					public boolean fieldOccupied(int cx, int cy) {
-						return cx == x && cy == y;
+					public int[][] getGeometryMatrix() {
+						int[][] geometry = { { 1, 1 }, { 1, 1 } };
+						return geometry;
 					}
 				});
-				this.addTile("hook", new Tile(0, 0) {
+				this.addTile("hookUL", new MatrixTile(0, 0) {
 					@Override
-					public boolean fieldOccupied(int cx, int cy) {
-						return (cx == x && cy == y) || (cx == x + 1 && cy == y) || (cx == x && cy == y + 1);
+					public int[][] getGeometryMatrix() {
+						int[][] geometry = { { 1, 1 }, { 1, 0 } };
+						return geometry;
+					}
+				});
+				this.addTile("hookUR", new MatrixTile(2, 0) {
+					@Override
+					public int[][] getGeometryMatrix() {
+						int[][] geometry = { { 1, 1 }, { 0, 1 } };
+						return geometry;
+					}
+				});
+				this.addTile("hookBL", new MatrixTile(0, 2) {
+					@Override
+					public int[][] getGeometryMatrix() {
+						int[][] geometry = { { 1, 0 }, { 1, 1 } };
+						return geometry;
+					}
+				});
+				this.addTile("hookBR", new MatrixTile(2, 2) {
+					@Override
+					public int[][] getGeometryMatrix() {
+						int[][] geometry = { { 0, 1 }, { 1, 1 } };
+						return geometry;
 					}
 				});
 			}
 
 			@Override
 			public boolean won() {
-				return this.getTile("square").getX() != 1 || this.getTile("square").getY() != 1;
+				return this.getTile("square").getX() == 1 || this.getTile("square").getY() == 4;
 			}
 		});
 
