@@ -9,25 +9,33 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 enum Mapping {
-	DIRECT, DOWN_SAMPLING_WITH_GAPS
+	DIRECT, MAPPED
 }
 
 @SuppressWarnings("serial")
+/**
+ * This class simulates how an image would be rendered on the LightHouse of the
+ * CAU.
+ * https://www.kunstgeschichte.uni-kiel.de/de/kunstcampus-kiel/verwaltungshochhaus-projekt-lighthouse
+ */
 public class LightHouseSimulator extends Canvas {
 	private BufferedImage BackgroundImage = null;
 	private BufferedImage redOverlay = null;
 	private BufferedImage greenOverlay = null;
 	private BufferedImage blueOverlay = null;
-	private Mapping mode = Mapping.DOWN_SAMPLING_WITH_GAPS;
+	private Mapping mode = Mapping.MAPPED;
 	private JFrame frame = null;
 	private int[] directData = new int[14 * 28 * 3];
 	private int windowHeight = 6;
 	private int gapHeight = 5;
 
+	/**
+	 * Opens a new window displaying a completely turned off LightHouse. The Lights
+	 * can then be turned on by providing ImageData via {@code setData}
+	 */
 	public LightHouseSimulator() {
 		super();
 		try {
-			System.out.println(new File(getClass().getResource("/lightHouseSimulator/background.png").getFile()));
 			BackgroundImage = ImageIO
 					.read(new File(getClass().getResource("/lightHouseSimulator/background.png").getFile()));
 			redOverlay = ImageIO.read(new File(getClass().getResource("/lightHouseSimulator/red.png").getFile()));
@@ -43,6 +51,7 @@ public class LightHouseSimulator extends Canvas {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
+	@Override
 	public void paint(Graphics g) {
 
 		BufferedImage currentImg = new BufferedImage(BackgroundImage.getWidth(), BackgroundImage.getHeight(),
@@ -62,7 +71,7 @@ public class LightHouseSimulator extends Canvas {
 		g.drawImage(currentImg, 0, 0, this);
 	}
 
-	public void blendAt(int destX, int destY, int rFactor, int gFactor, int bFactor, BufferedImage img) {
+	private void blendAt(int destX, int destY, int rFactor, int gFactor, int bFactor, BufferedImage img) {
 		for (int x = 0; x < redOverlay.getWidth(); x++)
 			for (int y = 0; y < redOverlay.getHeight(); y++) {
 				Color backPixel = new Color(img.getRGB(x + destX, y + destY));
@@ -87,11 +96,23 @@ public class LightHouseSimulator extends Canvas {
 			}
 	}
 
+	/**
+	 * Sets the image data to display on the LightHouse.
+	 * <p>
+	 * In {@code MAPPED} mode (the default) the Image may have an arbitrary size and
+	 * is resampled to 28x14. furthermore the image is masked by the location of the
+	 * windows, so some pixels are not shown, according to the emtpy rows on the
+	 * LightHouse. How much of horizontal space should be obmitted can be set by
+	 * {@code setGapsRatio}.
+	 * <p>
+	 * In {@code DIRECT} mode, the Image must have a size of 28x14, otherwise an
+	 * {@code IllegalArgumentException} is thrown. The pixels of the image provied
+	 * directly correspond to the windows of the LightHouse.
+	 * 
+	 * @param data the Image to be displayed
+	 */
 	public void setData(BufferedImage data) {
-		if (mode == Mapping.DOWN_SAMPLING_WITH_GAPS) {
-			if (Math.abs(data.getWidth() / data.getHeight() - 10.0 / 11) < 0.05)
-				throw new IllegalArgumentException(
-						"Data must have an aspect ratio of 10:11 for down sampleing mapping.");
+		if (mode == Mapping.MAPPED) {
 			setMappedData(data);
 		}
 		if (mode == Mapping.DIRECT) {
@@ -112,6 +133,16 @@ public class LightHouseSimulator extends Canvas {
 
 	}
 
+	/**
+	 * This sets the ratio at which pixels are obmitted according to the horizontal
+	 * gaps between windows. Invocing {@code setGapsRatio(1, 0)} makes all pixels
+	 * visible, obmitting nothing.
+	 * 
+	 * @param windowHeight the proposed height of a window in ralation to
+	 *                     {@code gapHeight}
+	 * @param gapHeight    the proposed height of the gap between windows in
+	 *                     ralation to {@code windowHeight}
+	 */
 	public void setGapsRatio(int windowHeight, int gapHeight) {
 		this.windowHeight = windowHeight;
 		this.gapHeight = gapHeight;
@@ -148,12 +179,26 @@ public class LightHouseSimulator extends Canvas {
 		return resized;
 	}
 
+	/**
+	 * This sets the mode of displaying Images to {@code MAPPED} (the default). In
+	 * {@code MAPPED} mode the Image may have an arbitrary size and is resampled to
+	 * 28x14. furthermore the image is masked by the location of the windows, so
+	 * some pixels are not shown, according to the emtpy rows on the LightHouse. How
+	 * much of horizontal space should be obmitted can be set by
+	 * {@code setGapsRatio}.
+	 */
 	public void setMappingMode() {
-		mode = Mapping.DOWN_SAMPLING_WITH_GAPS;
+		mode = Mapping.MAPPED;
 	}
 
+	/**
+	 * This sets the mode of displaying Images to {@code DIRECT}. In {@code DIRECT}
+	 * mode, the Image must have a size of 28x14, otherwise an
+	 * {@code IllegalArgumentException} is thrown. The pixels of the image provied
+	 * directly correspond to the windows of the LightHouse.
+	 */
 	public void setDirectMode() {
-		mode = Mapping.DOWN_SAMPLING_WITH_GAPS;
+		mode = Mapping.DIRECT;
 	}
 
 }
