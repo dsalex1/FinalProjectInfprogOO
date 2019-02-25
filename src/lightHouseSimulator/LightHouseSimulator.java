@@ -27,7 +27,6 @@ public class LightHouseSimulator extends Canvas {
 	public LightHouseSimulator() {
 		super();
 		try {
-			System.out.println(new File(getClass().getResource("/lightHouseSimulator/background.png").getFile()));
 			BackgroundImage = ImageIO
 					.read(new File(getClass().getResource("/lightHouseSimulator/background.png").getFile()));
 			redOverlay = ImageIO.read(new File(getClass().getResource("/lightHouseSimulator/red.png").getFile()));
