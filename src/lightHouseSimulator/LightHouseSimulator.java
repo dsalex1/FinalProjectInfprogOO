@@ -27,14 +27,12 @@ public class LightHouseSimulator extends Canvas {
 	public LightHouseSimulator() {
 		super();
 		try {
-			System.out.println(new File(getClass().getResource("/lightHouseSimulator/background.png").getFile()));
 			BackgroundImage = ImageIO
 					.read(new File(getClass().getResource("/lightHouseSimulator/background.png").getFile()));
 			redOverlay = ImageIO.read(new File(getClass().getResource("/lightHouseSimulator/red.png").getFile()));
 			greenOverlay = ImageIO.read(new File(getClass().getResource("/lightHouseSimulator/green.png").getFile()));
 			blueOverlay = ImageIO.read(new File(getClass().getResource("/lightHouseSimulator/blue.png").getFile()));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		frame = new JFrame();
