@@ -41,6 +41,7 @@ public class LightHouseSimulator extends Canvas {
 		frame.add(this);
 		frame.setSize(BackgroundImage.getWidth(this), BackgroundImage.getHeight(this));
 		frame.setVisible(true);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
 	public void paint(Graphics g) {
