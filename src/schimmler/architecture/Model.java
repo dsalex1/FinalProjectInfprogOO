@@ -1,7 +1,10 @@
 package schimmler.architecture;
 
 import java.util.List;
+
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /** The generic model that represents this game. */
 public abstract class Model {
@@ -11,10 +14,14 @@ public abstract class Model {
 
 	/** The plugins currently loaded. */
 	protected List<Plugin> plugins;
+	
+	/** A hashmap of lists for blacklisting plugins for specific events after they throw an exception. */
+	private HashMap<String, List<Plugin>> blackList;
 
 	/** Create a new Model and initialize it. */
 	public Model() {
 		plugins = new ArrayList<Plugin>();
+		blackList = new HashMap<String, List<Plugin>>();
 		init();
 	}
 
@@ -58,6 +65,30 @@ public abstract class Model {
 	public void registerPlugin(Plugin plugin) {
 		plugins.add(plugin);
 		plugin.init(this);
+	}
+	
+	/**
+	 * Call an event for a given plugin interface from all plugins.
+	 * @param eventName the name of the event to call in all plugins
+	 * @param from the interface this event is from
+	 * @param cparams the class types of the parameters of this event
+	 * @param params the parameters for this invocation
+	 */
+	public void call(String eventName, Class<? extends Plugin> from,  Class<?>[] cparams, Object[] params) {
+		for(Plugin plugin:plugins) { // process each plugin for the event
+			try {
+				if(!from.isInstance(plugin)) continue; // don't process plugins that do not implement the origin or any extending class of it
+				if(blackList.computeIfAbsent(eventName, k -> new ArrayList<Plugin>()).contains(plugin)) continue; // don't process plugins that have been blacklisted for this event (also create new array list if the event doesn't exist in the blacklist yet)
+				plugin.getClass().getMethod(eventName, cparams).invoke(plugin, params); // call the event method through javas reflect framework
+			}catch(InvocationTargetException ns) {
+				if(ns.getTargetException() != null && ns.getTargetException() instanceof UnsupportedOperationException) { 
+					blackList.get(eventName).add(plugin); // all plugins that are written in javascript and don't implement needed interface methods land here
+				}else
+					new RuntimeException(plugin.getName(),ns.getTargetException()).printStackTrace(); // unhull the exception and output it with the associated plugin
+			}catch(Exception e) {
+				e.printStackTrace(); // all other exceptions should be send directly to the error stream
+			}
+		}
 	}
 
 }

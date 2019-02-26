@@ -3,6 +3,7 @@ package schimmler.test;
 import java.util.HashMap;
 
 import schimmler.architecture.Model;
+import schimmler.architecture.Tile;
 import schimmler.architecture.View;
 
 public class TestView implements View {
@@ -18,7 +19,7 @@ public class TestView implements View {
 	}
 
 	@Override
-	public void update(Model m) {
+	public void onUpdate(Model m) {
 
 	}
 
@@ -38,10 +39,15 @@ public class TestView implements View {
 			System.out.print('=');
 		System.out.print('|');
 		System.out.println();
-		for (int y = 0; y < m.getLevel().getHeigth(); y++) {
+		for (int y = 0; y < m.getLevel().getHeight(); y++) {
 			System.out.print('|');
-			for (int x = 0; x < m.getLevel().getWidth(); x++)
-				System.out.print(map.get(m.getLevel().fieldOccupied(x, y)));
+			for (int x = 0; x < m.getLevel().getWidth(); x++) {
+				String atField = m.getLevel().fieldOccupied(x, y);
+				if(atField != null && atField.equals(m.getLevel().getSelected()))
+					System.out.print('X');
+				else
+					System.out.print(map.get(atField));
+			}
 			System.out.print('|');
 			System.out.println();
 		}
@@ -50,6 +56,21 @@ public class TestView implements View {
 			System.out.print('=');
 		System.out.print('|');
 		System.out.println();
+	}
+
+	@Override
+	public void onTileSelected(Model m, Tile tile, String id) {
+		render(m);
+	}
+
+	@Override
+	public void onTileDeselected(Model m, Tile tile, String id) {
+		render(m);
+	}
+
+	@Override
+	public void onTileMoved(Model m, Tile tile, String id, int oldx, int oldy) {
+		render(m);
 	}
 
 }

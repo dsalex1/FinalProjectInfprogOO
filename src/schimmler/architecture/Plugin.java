@@ -8,14 +8,27 @@ public interface Plugin {
 
 	/**
 	 * Initialize a plugin.
-	 * 
 	 * @param m the model this event is called from.
 	 */
 	public void init(Model m);
+	
+	/**
+	 * Kill and deactive a plugin.
+	 * 
+	 * @param m the model this event is called from.
+	 */
+	default public void onKill(Model m)  {}
+	
+	/**
+	 * Call the {@link #onKill(Model)} event for all plugins that subscribed to it.
+	 * @param m  the model that triggered the event
+	 */
+	public static void kill(Model m) {
+		m.call("onKill", View.class, new Class[] {Model.class}, new Object[] {m});
+	}
 
 	/**
 	 * Return the name of the plugin.
-	 * 
 	 * @return the name or identifier of the plugin.
 	 */
 	public String getName();

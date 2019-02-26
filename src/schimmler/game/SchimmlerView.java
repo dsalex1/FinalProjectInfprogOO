@@ -4,16 +4,14 @@ import java.util.HashMap;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 import lightHouseSimulator.LightHouseSimulator;
 import schimmler.architecture.Model;
+import schimmler.architecture.Tile;
 import schimmler.architecture.View;
 
+@SuppressWarnings("serial")
 public class SchimmlerView extends Canvas implements View {
 
 	private static final Boolean SHOW_LIGHTHOUSE = true;
@@ -52,16 +50,16 @@ public class SchimmlerView extends Canvas implements View {
 			lightHouse.setGapsRatio(1, 0);
 		}
 
-		update(m);
+		View.update(m);
 	}
 
 	@Override
 	public String getName() {
-		return "ASCIIView";
+		return "SchimmlerView";
 	}
 
 	@Override
-	public void update(Model m) {
+	public void onUpdate(Model m) {
 		currentFrame = render(m);
 
 		if (SHOW_LIGHTHOUSE) {
@@ -86,7 +84,7 @@ public class SchimmlerView extends Canvas implements View {
 		map.put(null, Color.GRAY);
 
 		for (int column = 0; column < m.getLevel().getWidth(); column++)
-			for (int row = 0; row < m.getLevel().getHeigth(); row++)
+			for (int row = 0; row < m.getLevel().getHeight(); row++)
 				drawTile(column, row, map.get(m.getLevel().fieldOccupied(column, row)), frame);
 
 		return frame;
@@ -102,5 +100,25 @@ public class SchimmlerView extends Canvas implements View {
 	public void paint(Graphics g) {
 		if (currentFrame != null)
 			g.drawImage(currentFrame, 0, 0, this);
+	}
+
+	@Override
+	public void onCursorMove(Model m, int x, int y) {
+		View.update(m);
+	}
+
+	@Override
+	public void onTileSelected(Model m, Tile tile, String id) {
+		View.update(m);
+	}
+
+	@Override
+	public void onTileDeselected(Model m, Tile tile, String id) {
+		View.update(m);
+	}
+
+	@Override
+	public void onTileMoved(Model m, Tile tile, String id, int oldx, int oldy) {
+		View.update(m);
 	}
 }

@@ -16,13 +16,35 @@ public abstract class Level {
 
 	/** The tiles present in this level where each tile has a unique identifier. */
 	protected Map<String, Tile> tiles;
+	
+	/** The identifier of the currently selected tile, null if no tile is selected. */
+	protected String selected;
 
 	/** Create a new Level and initialize it. */
 	public Level() {
 		tiles = new HashMap<String, Tile>();
 		init();
 	}
-
+	
+	/**
+	 * Return the identifier of the currently selected tile. Null if no tile is selected.
+	 * @return the identifier of the currently selected tile or null.
+	 */
+	public String getSelected() {
+		return selected;
+	}
+	
+	/**
+	 * Set the currently selected tile or null if no tile should be selected.
+	 * @param id the identifier of the new selected tile or null
+	 * @throws IllegalArgumentException if an identifier not in this level is supplied
+	 */
+	public void setSelected(String id) {
+		if(id != null && !tiles.containsKey(id))
+			throw new IllegalArgumentException("The tile with the identifier '"+id+"' is not in this level.");
+		this.selected = id;
+	}
+ 
 	/**
 	 * Return the width of this level.
 	 * 
@@ -37,7 +59,7 @@ public abstract class Level {
 	 * 
 	 * @return the height of this level.
 	 */
-	public int getHeigth() {
+	public int getHeight() {
 		return height;
 	}
 
@@ -91,7 +113,24 @@ public abstract class Level {
 	 * @return whether the position is within the level.
 	 */
 	public boolean inLevel(int x, int y) {
-		return !(x < 0 || y < 0 || width >= x || height >= y);
+		return (x >= 0 && y >= 0 && width > x && height > y);
+	}
+	
+	/**
+	 * Return the identifier of the field that occupies the given x and y position and exclude a given identifier (null if the field is free).
+	 * 
+	 * @param x the x position of the field to check.
+	 * @param y the y position of the field to check.
+	 * @param exclude the identifier to exclude
+	 * @return the found fields identifier or null if it is free.
+	 */
+	public String fieldOccupied(int x, int y, String exclude) {
+		for (Entry<String, Tile> t : tiles.entrySet()) {
+			if(exclude != null && t.getKey().equals(exclude)) continue;
+			if (t.getValue().fieldOccupied(x, y))
+				return t.getKey();
+		}
+		return null;
 	}
 
 	/**
@@ -103,11 +142,7 @@ public abstract class Level {
 	 * @return the found fields identifer or null if it is free.
 	 */
 	public String fieldOccupied(int x, int y) {
-		for (Entry<String, Tile> t : tiles.entrySet()) {
-			if (t.getValue().fieldOccupied(x, y))
-				return t.getKey();
-		}
-		return null;
+		return fieldOccupied(x, y, null);
 	}
 
 	/**

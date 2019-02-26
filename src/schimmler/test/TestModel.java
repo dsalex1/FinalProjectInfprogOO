@@ -17,16 +17,16 @@ public class TestModel extends Model {
 			public void init() {
 				this.width = 3;
 				this.height = 3;
-				this.addTile("square", new Tile(1, 1) {
+				this.addTile("square", new Tile(2, 2) {
 					@Override
-					public boolean fieldOccupied(int cx, int cy) {
-						return cx == x && cy == y;
+					public boolean fieldOccupiedRelative(int cx, int cy) {
+						return cx == 0 && cy == 0;
 					}
 				});
-				this.addTile("hook", new Tile(0, 0) {
+				this.addTile("hook", new Tile(0, 1) {
 					@Override
-					public boolean fieldOccupied(int cx, int cy) {
-						return (cx == x && cy == y) || (cx == x + 1 && cy == y) || (cx == x && cy == y + 1);
+					public boolean fieldOccupiedRelative(int cx, int cy) {
+						return (cx == 0 && cy == 0) || (cx == 1 && cy == 0) || (cx == 0 && cy == 1);
 					}
 				});
 			}
@@ -36,12 +36,12 @@ public class TestModel extends Model {
 				return this.getTile("square").getX() != 1 || this.getTile("square").getY() != 1;
 			}
 		});
-
-		registerPlugin(new TestView());
 	}
 
 	public static void main(String[] args) {
 		TestModel model = new TestModel();
+		model.registerPlugin(new TestView());
+		model.registerPlugin(new TestController());
 		System.out.println(model.getPlugins());
 	}
 
