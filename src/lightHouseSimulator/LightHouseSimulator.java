@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 enum Mapping {
 	DIRECT, MAPPED
@@ -18,7 +19,7 @@ enum Mapping {
  * CAU.
  * https://www.kunstgeschichte.uni-kiel.de/de/kunstcampus-kiel/verwaltungshochhaus-projekt-lighthouse
  */
-public class LightHouseSimulator extends Canvas {
+public class LightHouseSimulator extends JPanel {
 	private BufferedImage BackgroundImage = null;
 	private BufferedImage redOverlay = null;
 	private BufferedImage greenOverlay = null;
@@ -44,15 +45,15 @@ public class LightHouseSimulator extends Canvas {
 			e.printStackTrace();
 		}
 		frame = new JFrame();
-		frame.add(this);
 		frame.setSize(BackgroundImage.getWidth(this), BackgroundImage.getHeight(this));
 		frame.setVisible(true);
+		frame.add(this);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
 	@Override
-	public void paint(Graphics g) {
-
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
 		BufferedImage currentImg = new BufferedImage(BackgroundImage.getWidth(), BackgroundImage.getHeight(),
 				BufferedImage.TYPE_3BYTE_BGR);
 

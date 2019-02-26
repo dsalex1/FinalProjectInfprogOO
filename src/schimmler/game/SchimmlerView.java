@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 import lightHouseSimulator.LightHouseSimulator;
 import schimmler.architecture.Model;
@@ -12,7 +13,7 @@ import schimmler.architecture.Tile;
 import schimmler.architecture.View;
 
 @SuppressWarnings("serial")
-public class SchimmlerView extends Canvas implements View {
+public class SchimmlerView extends JPanel implements View {
 
 	private static final Boolean SHOW_LIGHTHOUSE = true;
 	private static final int SUBPIXEL_COUNT = 20;
@@ -38,9 +39,9 @@ public class SchimmlerView extends Canvas implements View {
 	@Override
 	public void init(Model m) {
 		window = new JFrame();
-		window.add(this);
-		window.setVisible(true);
 		window.setSize(WIDTH, HEIGHT + window.getInsets().top - 2);
+		window.setVisible(true);
+		window.add(this);
 
 		window.setResizable(false);
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -97,7 +98,8 @@ public class SchimmlerView extends Canvas implements View {
 	}
 
 	@Override
-	public void paint(Graphics g) {
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
 		if (currentFrame != null)
 			g.drawImage(currentFrame, 0, 0, this);
 	}
