@@ -119,6 +119,7 @@ public class LightHouseSimulator extends Canvas {
 				throw new IllegalArgumentException("Data must have dimensions 28x14 for direct mapping.");
 			setDirectData(data);
 		}
+		this.repaint();
 	}
 
 	private void setDirectData(BufferedImage data) {
