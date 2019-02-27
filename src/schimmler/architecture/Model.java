@@ -64,7 +64,22 @@ public abstract class Model {
 	 */
 	public void registerPlugin(Plugin plugin) {
 		plugins.add(plugin);
-		plugin.init(this);
+		try {
+			plugin.init(this);
+		}catch(UnsupportedOperationException uoe) {
+			// Ignore UnsupportedOperationException's silently (most likely caused by a JavaScript plugin not having implemented this method)
+		}catch(Exception e) {
+			new RuntimeException(plugin.getName(),e).printStackTrace(); // print out the exception with plugin context
+		}
+	}
+	
+	/**
+	 * Load all plugins a given loader can provide.
+	 * @param loader the loader of the plugins to add
+	 */
+	public void loadPlugins(PluginLoader loader) {
+		for(Plugin p:loader.loadPlugins())
+			registerPlugin(p);
 	}
 	
 	/**
@@ -82,11 +97,11 @@ public abstract class Model {
 				plugin.getClass().getMethod(eventName, cparams).invoke(plugin, params); // call the event method through javas reflect framework
 			}catch(InvocationTargetException ns) {
 				if(ns.getTargetException() != null && ns.getTargetException() instanceof UnsupportedOperationException) { 
-					blackList.get(eventName).add(plugin); // all plugins that are written in javascript and don't implement needed interface methods land here
+					blackList.get(eventName).add(plugin); // all plugins that are written in JavaScript and don't implement needed interface methods land here, other Plugins may use this as well
 				}else
 					new RuntimeException(plugin.getName(),ns.getTargetException()).printStackTrace(); // unhull the exception and output it with the associated plugin
 			}catch(Exception e) {
-				e.printStackTrace(); // all other exceptions should be send directly to the error stream
+				new RuntimeException(plugin.getName(),e).printStackTrace(); // all other exceptions should be send directly to the error stream
 			}
 		}
 	}

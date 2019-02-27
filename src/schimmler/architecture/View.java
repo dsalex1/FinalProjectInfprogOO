@@ -1,7 +1,7 @@
 package schimmler.architecture;
 
 /** A specific plugin meant to only display data to the end user. */
-public interface View extends InputPlugin {
+public interface View extends Plugin {
 
 	/**
 	 * A method that gets called regulary for frame updates.

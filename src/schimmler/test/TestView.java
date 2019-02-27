@@ -2,11 +2,12 @@ package schimmler.test;
 
 import java.util.HashMap;
 
+import schimmler.architecture.InputPlugin;
 import schimmler.architecture.Model;
 import schimmler.architecture.Tile;
 import schimmler.architecture.View;
 
-public class TestView implements View {
+public class TestView implements View, InputPlugin {
 
 	@Override
 	public void init(Model m) {

@@ -8,12 +8,13 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import lightHouseSimulator.LightHouseSimulator;
+import schimmler.architecture.InputPlugin;
 import schimmler.architecture.Model;
 import schimmler.architecture.Tile;
 import schimmler.architecture.View;
 
 @SuppressWarnings("serial")
-public class SchimmlerView extends JPanel implements View {
+public class SchimmlerView extends JPanel implements View, InputPlugin {
 
 	private static final Boolean SHOW_LIGHTHOUSE = true;
 	private static final int SUBPIXEL_COUNT = 20;

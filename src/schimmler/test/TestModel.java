@@ -1,8 +1,11 @@
 package schimmler.test;
 
+import java.io.File;
+
 import schimmler.architecture.Level;
 import schimmler.architecture.Model;
 import schimmler.architecture.Tile;
+import schimmler.js.JavaScriptPluginLoader;
 
 public class TestModel extends Model {
 
@@ -42,6 +45,7 @@ public class TestModel extends Model {
 		TestModel model = new TestModel();
 		model.registerPlugin(new TestView());
 		model.registerPlugin(new TestController());
+		model.loadPlugins(new JavaScriptPluginLoader(new File(System.getProperty("user.dir")+"/plugins/")));
 		System.out.println(model.getPlugins());
 	}
 

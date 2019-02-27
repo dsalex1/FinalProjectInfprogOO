@@ -29,8 +29,25 @@ public interface Plugin {
 
 	/**
 	 * Return the name of the plugin.
+	 * This method *MUST* be implemented by all plugins.
 	 * @return the name or identifier of the plugin.
 	 */
 	public String getName();
+	
+	/**
+	 * Log a normal message from the plugin that invoked it.
+	 * @param msg the message to log
+	 */
+	default public  void log(String msg) {
+		System.out.println("["+getName()+"]: "+msg);
+	}
+	
+	/**
+	 * Log an error message from the plugin that invoked it.
+	 * @param msg the error message to log
+	 */
+	default public  void err(String msg) {
+		System.err.println("["+getName()+"]: "+msg);
+	}
 
 }
