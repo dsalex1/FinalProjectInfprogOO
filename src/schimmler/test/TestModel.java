@@ -3,8 +3,10 @@ package schimmler.test;
 import java.io.File;
 
 import schimmler.architecture.Level;
+import schimmler.architecture.LevelType;
 import schimmler.architecture.Model;
 import schimmler.architecture.Tile;
+import schimmler.architecture.TileType;
 import schimmler.jar.JarFilePluginLoader;
 import schimmler.js.JavaScriptPluginLoader;
 
@@ -16,36 +18,44 @@ public class TestModel extends Model {
 
 	@Override
 	public void init() {
-		setLevel(new Level() {
+		
+		
+		registerTileType("square", new TileType() {
 			@Override
-			public void init() {
-				this.width = 3;
-				this.height = 3;
-				this.addTile("square", new Tile(2, 2) {
-					@Override
-					public boolean fieldOccupiedRelative(int cx, int cy) {
-						return cx == 0 && cy == 0;
-					}
-				});
-				this.addTile("hook", new Tile(0, 1) {
-					@Override
-					public boolean fieldOccupiedRelative(int cx, int cy) {
-						return (cx == 0 && cy == 0) || (cx == 1 && cy == 0) || (cx == 0 && cy == 1);
-					}
-				});
+			public boolean fieldOccupiedRelative(Tile tile, int cx, int cy) {
+				return cx == 0 && cy == 0;
+			}
+		});
+		registerTileType("hook", new TileType() {
+			@Override
+			public boolean fieldOccupiedRelative(Tile tile, int cx, int cy) {
+				return (cx == 0 && cy == 0) || (cx == 1 && cy == 0) || (cx == 0 && cy == 1);
+			}
+		});
+		
+		registerLevelType("test", new LevelType() {
+			@Override
+			public void init(Level level) {
+				level.setWidth(3);
+				level.setHeight(3);
+				level.addTile("square", createTile("square", 2, 1));
+				level.addTile("hook", createTile("hook", 0, 0));
 			}
 
 			@Override
-			public boolean won() {
-				return this.getTile("square").getX() != 1 || this.getTile("square").getY() != 1;
+			public boolean won(Level level) {
+				return level.getTile("square").getX() != 1 || level.getTile("square").getY() != 1;
 			}
+
 		});
+		
+		setLevel(createLevel("test"));
 	}
 
 	public static void main(String[] args) {
 		TestModel model = new TestModel();
-		//model.registerPlugin(new TestView());
-		//model.registerPlugin(new TestController());
+		model.registerPlugin(new TestView());
+		model.registerPlugin(new TestController());
 		model.loadPlugins(new JavaScriptPluginLoader(new File(System.getProperty("user.dir")+"/plugins/")));
 		model.loadPlugins(new JarFilePluginLoader(new File(System.getProperty("user.dir")+"/plugins/")));
 		System.out.println(model.getPlugins());

@@ -1,33 +1,32 @@
 package schimmler.game;
 
 import schimmler.architecture.Tile;
+import schimmler.architecture.TileType;
 
-public abstract class MatrixTile extends Tile {
+public abstract class MatrixTileType extends TileType {
 
     /**
-     * should return the desired geometry of this tile
+     * should return the desired geometry of this tile type
      */
     public abstract int[][] getGeometryMatrix();
 
     /**
-     * Create a new tile with given coordinates.
-     * 
-     * @param x the x position.
-     * @param y the y position.
+     * Create a new matrix tile type.
      */
-    public MatrixTile(int x, int y) {
-        super(x, y);
+    public MatrixTileType() {
+        super();
     }
 
     /**
      * checks whether an coordinate is inside the geometry of a tile, and if so if
      * this coordinate is occupied
      * 
+     * @param tile the tile to check
      * @param cx the relative x position to check.
      * @param cy the relative y position to check.
      * @return whether this tile is at the given position.
      */
-    private boolean isInMatrix(int cx, int cy) {
+    private boolean isInMatrix(Tile tile, int cx, int cy) {
         int[][] geometry = getGeometryMatrix();
 
         // check of geometry is properly set
@@ -49,8 +48,8 @@ public abstract class MatrixTile extends Tile {
     }
 
     @Override
-    public boolean fieldOccupiedRelative(int cx, int cy) {
-        return isInMatrix(cx, cy);
+    public boolean fieldOccupiedRelative(Tile tile, int cx, int cy) {
+        return isInMatrix(tile, cx, cy);
     }
 
 }

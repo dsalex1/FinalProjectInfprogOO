@@ -166,8 +166,10 @@ public class TestController implements Plugin {
 	@SuppressWarnings("deprecation")
 	@Override
 	public void onKill(Model m) {
+		try {
 		if(this.thread != null && this.thread.isAlive())
 			this.thread.stop();
+		}catch(Exception e) {}
 	}
 	
 	

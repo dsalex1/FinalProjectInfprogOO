@@ -1,7 +1,8 @@
 package schimmler.architecture;
 
 import java.util.List;
-
+import java.util.Map;
+import java.util.Map.Entry;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,6 +10,12 @@ import java.util.HashMap;
 /** The generic model that represents this game. */
 public abstract class Model {
 
+	/** A map of tile type identifier to types of tiles. */
+	protected Map<String, TileType> tileTypeDictionary;
+	
+	/** A map of level identifier to types of levels. */
+	protected Map<String, LevelType> levelTypeDictionary;
+	
 	/** The current level being played. */
 	protected Level level;
 
@@ -16,7 +23,7 @@ public abstract class Model {
 	protected List<Plugin> plugins;
 	
 	/** A hashmap of lists for blacklisting plugins for specific events after they throw an exception. */
-	private HashMap<String, List<Plugin>> blackList;
+	private Map<String, List<Plugin>> blackList;
 	
 	/** A thread for sending events needed regullary. */
 	private Thread gameLoop;
@@ -25,6 +32,8 @@ public abstract class Model {
 	public Model() {
 		plugins = new ArrayList<Plugin>();
 		blackList = new HashMap<String, List<Plugin>>();
+		tileTypeDictionary = new HashMap<String, TileType>();
+		levelTypeDictionary = new HashMap<String, LevelType>();
 		init();
 	}
 
@@ -58,8 +67,10 @@ public abstract class Model {
 	 */
 	@SuppressWarnings("deprecation")
 	protected void stop() {
+		try {
 		if(gameLoop != null && gameLoop.isAlive())
 			gameLoop.stop();
+		}catch(Exception e) {}
 	}
 
 	/**
@@ -79,6 +90,124 @@ public abstract class Model {
 	public void setLevel(Level level) {
 		this.level = level;
 	}
+	
+	
+	/**
+	 * Add a tile with a given identifier to the tile type dictionary.
+	 * @param id   the identifier of the tile to add.
+	 * @param tileType the tile type to add.
+	 * @throws IllegalArgumentException the identifier was already present in the dictionary.
+	 */
+	public void registerTileType(String identifier, TileType tileType) {
+		if (tileTypeDictionary.containsKey(identifier))
+			throw new IllegalArgumentException("The identifier '" + identifier + "' is already present in the tile mapping.");
+		tileTypeDictionary.put(identifier, tileType);
+	}
+	
+	
+	/**
+	 * Return a tile type with a given identifier (or null if not in the model).
+	 * 
+	 * @param id the identifier to lookup.
+	 * @return the found tile type with the given identifier (or null if not found).
+	 */
+	public TileType getTileType(String id) {
+		return tileTypeDictionary.get(id);
+	}
+	
+	
+	/**
+	 * Return the registered name of a TileType (or null). Meant for serialization.
+	 * @param type the tile type to lookup
+	 * @return the name of the TileType (or null if it is not registered)
+	 */
+	public String getTileTypeName(TileType type) {
+		for(Entry<String, TileType> e:tileTypeDictionary.entrySet())
+			if(type.equals(e.getValue())) return e.getKey();
+		return null;
+	}
+	
+	/**
+	 * Return the identifier to tile type mapping currently existent on this model.
+	 * @return the tile type mapping
+	 */
+	public Map<String, TileType> getTileTypes() {
+		return tileTypeDictionary;
+	}
+	
+	
+	/**
+	 * Create a tile out of a tile type identifier and a x and y position.
+	 * @param identifier the name of the tile type
+	 * @param x the x position of the tile
+	 * @param y the y position of the tile
+	 * @return the created tile
+	 * @throes IllegalArgumentException if no tile type with the given identifier was found
+	 */
+	public Tile createTile(String identifier, int x, int y) {
+		TileType type = getTileType(identifier);
+		if(type == null) throw new IllegalArgumentException("No TileType with the identifier '"+identifier+"' was found.");
+		Tile level = new Tile(x, y, type);;
+		return level;
+	}
+	
+	/**
+	 * Add a tile with a given identifier to the level type dictionary.
+	 * @param id   the identifier of the level type to add.
+	 * @param levelType the level type to add.
+	 * @throws IllegalArgumentException the identifier was already present in the dictionary.
+	 */
+	public void registerLevelType(String identifier, LevelType levelType) {
+		if (levelTypeDictionary.containsKey(identifier))
+			throw new IllegalArgumentException("The identifier '" + identifier + "' is already present in the level type mapping.");
+		levelTypeDictionary.put(identifier, levelType);
+	}
+	
+	
+	/**
+	 * Return a level type with a given identifier (or null if not in the model).
+	 * 
+	 * @param id the identifier to lookup.
+	 * @return the found level type with the given identifier (or null if not found).
+	 */
+	public LevelType getLevelType(String id) {
+		return levelTypeDictionary.get(id);
+	}
+	
+	
+	/**
+	 * Return the registered name of a LevelType (or null). Meant for serialization.
+	 * @param type the level type to lookup
+	 * @return the name of the LevelType (or null if it is not registered)
+	 */
+	public String getLevelTypeName(LevelType type) {
+		for(Entry<String, LevelType> e:levelTypeDictionary.entrySet())
+			if(type.equals(e.getValue())) return e.getKey();
+		return null;
+	}
+	
+	/**
+	 * Return the identifier to level type mapping currently existent on this model.
+	 * @return the level type mapping
+	 */
+	public Map<String, LevelType> getLevelTypes() {
+		return levelTypeDictionary;
+	}
+	
+	/**
+	 * Create a level out of a level type identifier.
+	 * @param identifier the name of the level type
+	 * @return the created level
+	 * @throes IllegalArgumentException if no level type with the given identifier was found
+	 */
+	public Level createLevel(String identifier) {
+		LevelType type = getLevelType(identifier);
+		if(type == null) throw new IllegalArgumentException("No LevelType with the identifier '"+identifier+"' was found.");
+		Level level = new Level(type);
+		type.init(level);
+		return level;
+	}
+
 
 	/**
 	 * Return the list of currently loaded plugins.

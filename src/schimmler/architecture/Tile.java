@@ -1,7 +1,7 @@
 package schimmler.architecture;
 
 /** A Tile in a map */
-public abstract class Tile {
+public final class Tile {
 
 	/** The most left x position of this tile. (lowest x) */
 	protected int x;
@@ -9,15 +9,19 @@ public abstract class Tile {
 	/** The most top y position of this tile. (lowest y) */
 	protected int y;
 	
+	/** The type of this tile */
+	protected TileType type;
+	
 	/**
 	 * Create a new tile with given coordinates.
 	 * 
 	 * @param x the x position.
 	 * @param y the y position.
 	 */
-	public Tile(int x, int y) {
+	public Tile(int x, int y, TileType type) {
 		this.x = x;
 		this.y = y;
+		this.type = type;
 	}
 
 	/**
@@ -55,7 +59,16 @@ public abstract class Tile {
 	public int getY() {
 		return y;
 	}
+	
+	/**
+	 * Return the tile type of this tile.
+	 * @return the type of tile this is.
+	 */
+	public TileType getType() {
+		return type;
+	}
 
+	
 	/**
 	 * Return whether a given relative position is taken up by this tile.
 	 * 
@@ -63,7 +76,9 @@ public abstract class Tile {
 	 * @param cy the relative y position to check.
 	 * @return whether this tile is at the given position.
 	 */
-	public abstract boolean fieldOccupiedRelative(int cx, int cy);
+	public boolean fieldOccupiedRelative(int cx, int cy) {
+		return type.fieldOccupiedRelative(this, cx, cy);
+	}
 	
 	/**
 	 * Return whether a given absolute position is taken up by this tile.
@@ -73,8 +88,7 @@ public abstract class Tile {
 	 * @return whether this tile is at the given position.
 	 */
 	public boolean fieldOccupied(int cx, int cy) {
-		return fieldOccupiedRelative(cx-x, cy-y);
+		return type.fieldOccupiedRelative(this, cx-this.x, cy-this.y);
 	}
-	
 
 }

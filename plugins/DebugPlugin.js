@@ -13,7 +13,7 @@
 		onTileMoved: function(model, tile, id, oldx, oldy) {
 			plugin.log("Moved tile '"+id+"' from ("+oldx+","+oldy+") to ("+tile.getX()+","+tile.getY()+")");
 		},
-		getName: function() { return "Debug Message Plugin" },
+		getName: function() { return "DebugMessagePlugin" },
 	}))();
 	return plugin;
 }());
