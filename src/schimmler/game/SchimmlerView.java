@@ -116,22 +116,18 @@ public class SchimmlerView extends JPanel implements GraphicalView, InputPlugin 
 
 	@Override
 	public void onCursorMove(Model m, int x, int y) {
-		View.update(m);
 	}
 
 	@Override
 	public void onTileSelected(Model m, Tile tile, String id) {
-		View.update(m);
 	}
 
 	@Override
 	public void onTileDeselected(Model m, Tile tile, String id) {
-		View.update(m);
 	}
 
 	@Override
 	public void onTileMoved(Model m, Tile tile, String id, int oldx, int oldy) {
-		View.update(m);
 	}
 
 	@Override
