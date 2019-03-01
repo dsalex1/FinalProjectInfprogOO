@@ -50,6 +50,12 @@ public class LightHouseSimulator extends JPanel {
 		frame.add(this);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
+	
+	
+	public int[] getDirectData() {
+		return directData;
+	}
+	
 
 	@Override
 	public void paintComponent(Graphics g) {
