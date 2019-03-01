@@ -45,11 +45,30 @@ public class SchimmlerController implements Plugin {
 						int dX = dragEnd[0] - dragStart[0];
 						int dY = dragEnd[1] - dragStart[1];
 
-						if (model.getLevel().canTileMoveTo(name, oX + dX, oY + dY)) {
+						// autocorrect unprecise userInput
 
-							tile.setX(oX + dX);
-							tile.setY(oY + dY);
-							InputPlugin.tileMoved(model, tile, name, oX, oY);
+						// if slightly not straight
+						if (Math.abs(dX) > Math.abs(dY))
+							dY = 0;
+						if (Math.abs(dY) > Math.abs(dX))
+							dX = 0;
+
+						while (dY != 0 || dX != 0) {
+							// try at current delta
+							if (model.getLevel().canTileMoveTo(name, oX + dX, oY + dY)) {
+
+								tile.setX(oX + dX);
+								tile.setY(oY + dY);
+								InputPlugin.tileMoved(model, tile, name, oX, oY);
+								break;
+							}
+							// if not possible try one closer
+							if (dX != 0) {
+								dX -= Math.signum(dX);
+							}
+							if (dY != 0) {
+								dY -= Math.signum(dY);
+							}
 						}
 						// and deselect the tile
 						model.getLevel().setSelected(null);
