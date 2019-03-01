@@ -11,10 +11,13 @@ import lightHouseSimulator.LightHouseSimulator;
 import schimmler.architecture.InputPlugin;
 import schimmler.architecture.Model;
 import schimmler.architecture.Tile;
+import schimmler.architecture.GraphicalView;
 import schimmler.architecture.View;
 
+//fiddle for aminations: http://jsfiddle.net/q5Lc4fv2/38/
+//http://jsfiddle.net/90ze2yjh/1/
 @SuppressWarnings("serial")
-public class SchimmlerView extends JPanel implements View, InputPlugin {
+public class SchimmlerView extends JPanel implements GraphicalView, InputPlugin {
 
 	private static final Boolean SHOW_LIGHTHOUSE = true;
 	private static final int SUBPIXEL_COUNT = 20;
@@ -86,8 +89,14 @@ public class SchimmlerView extends JPanel implements View, InputPlugin {
 		map.put(null, Color.GRAY);
 
 		for (int column = 0; column < m.getLevel().getWidth(); column++)
-			for (int row = 0; row < m.getLevel().getHeight(); row++)
-				drawTile(column, row, map.get(m.getLevel().fieldOccupied(column, row)), frame);
+			for (int row = 0; row < m.getLevel().getHeight(); row++) {
+				String tile = m.getLevel().fieldOccupied(column, row);
+				Color color = map.get(tile);
+				if (m.getLevel().getSelected() != null && m.getLevel().getSelected().equals(tile))
+					color = color.darker().darker();
+
+				drawTile(column, row, color, frame);
+			}
 
 		return frame;
 	}
@@ -119,5 +128,12 @@ public class SchimmlerView extends JPanel implements View, InputPlugin {
 
 	@Override
 	public void onTileMoved(Model m, Tile tile, String id, int oldx, int oldy) {
+	}
+
+	@Override
+	public int[] getLvlCoordAt(int x, int y) {
+		int relX = (x - OFFSET_X) / TILE_WIDTH;
+		int relY = (y - OFFSET_Y) / TILE_HEIGHT;
+		return new int[] { relX, relY };
 	}
 }
