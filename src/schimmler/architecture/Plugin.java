@@ -6,6 +6,10 @@ package schimmler.architecture;
  */
 public interface Plugin {
 
+	
+	// Important Note
+	// All Plugins must provide an empty constructor.
+	
 	/**
 	 * Initialize a plugin.
 	 * @param m the model this event is called from.

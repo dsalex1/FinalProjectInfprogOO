@@ -160,7 +160,7 @@ public class TestController implements Plugin {
 
 	@Override
 	public String getName() {
-		return "Console Controller";
+		return "ASCIIController";
 	}
 	
 	@SuppressWarnings("deprecation")

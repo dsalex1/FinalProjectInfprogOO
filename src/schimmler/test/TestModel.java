@@ -5,6 +5,7 @@ import java.io.File;
 import schimmler.architecture.Level;
 import schimmler.architecture.Model;
 import schimmler.architecture.Tile;
+import schimmler.jar.JarFilePluginLoader;
 import schimmler.js.JavaScriptPluginLoader;
 
 public class TestModel extends Model {
@@ -43,9 +44,10 @@ public class TestModel extends Model {
 
 	public static void main(String[] args) {
 		TestModel model = new TestModel();
-		model.registerPlugin(new TestView());
-		model.registerPlugin(new TestController());
+		//model.registerPlugin(new TestView());
+		//model.registerPlugin(new TestController());
 		model.loadPlugins(new JavaScriptPluginLoader(new File(System.getProperty("user.dir")+"/plugins/")));
+		model.loadPlugins(new JarFilePluginLoader(new File(System.getProperty("user.dir")+"/plugins/")));
 		System.out.println(model.getPlugins());
 		model.start();
 	}
