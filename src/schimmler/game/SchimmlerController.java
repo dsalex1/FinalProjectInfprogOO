@@ -20,6 +20,7 @@ public class SchimmlerController implements Plugin {
 
 	private Model model;
 	private Thread thread;
+	private int[] dragStart;
 
 	@Override
 	public void init(Model m) {
@@ -34,21 +35,33 @@ public class SchimmlerController implements Plugin {
 
 					@Override
 					public void mouseReleased(MouseEvent e) {
-						log("release: " + e.getX() + " " + e.getY());
 
-						model.getLevel().setSelected(null);
+						int[] dragEnd = ((GraphicalView) plugin).getLvlCoordAt(e.getX(), e.getY());
+
 						String name = model.getLevel().getSelected();
 						Tile tile = model.getLevel().getTile(name);
+						int oX = tile.getX();
+						int oY = tile.getY();
+						int dX = dragEnd[0] - dragStart[0];
+						int dY = dragEnd[1] - dragStart[1];
+
+						if (model.getLevel().canTileMoveTo(name, oX + dX, oY + dY)) {
+
+							tile.setX(oX + dX);
+							tile.setY(oY + dY);
+							InputPlugin.tileMoved(model, tile, name, oX, oY);
+						}
+						// and deselect the tile
+						model.getLevel().setSelected(null);
 						InputPlugin.tileDeselected(m, tile, name);
 					}
 
 					@Override
 					public void mousePressed(MouseEvent e) {
-						log("press: " + e.getX() + " " + e.getY());
 						// find coordinates in the system of the model
-						int[] coords = ((GraphicalView) plugin).getLvlCoordAt(e.getX(), e.getY());
+						dragStart = ((GraphicalView) plugin).getLvlCoordAt(e.getX(), e.getY());
 						// and get the corresponsing name of the tile
-						String name = model.getLevel().fieldOccupied(coords[0], coords[1]);
+						String name = model.getLevel().fieldOccupied(dragStart[0], dragStart[1]);
 
 						Tile tile = model.getLevel().getTile(name);
 
