@@ -47,6 +47,7 @@ public class TestModel extends Model {
 		model.registerPlugin(new TestController());
 		model.loadPlugins(new JavaScriptPluginLoader(new File(System.getProperty("user.dir")+"/plugins/")));
 		System.out.println(model.getPlugins());
+		model.start();
 	}
 
 }

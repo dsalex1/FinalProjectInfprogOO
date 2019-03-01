@@ -21,11 +21,48 @@ public interface Plugin {
 	
 	/**
 	 * Call the {@link #onKill(Model)} event for all plugins that subscribed to it.
+	 * Also stop the main game thead of the model.
 	 * @param m  the model that triggered the event
 	 */
 	public static void kill(Model m) {
 		m.call("onKill", View.class, new Class[] {Model.class}, new Object[] {m});
+		m.stop();
 	}
+	
+	
+	
+	/**
+	 * A new plugin has been loaded.
+	 * 
+	 * @param m the model this event is called from.
+	 */
+	default public void onPluginLoaded(Model m, Plugin p)  {}
+	
+	/**
+	 * Call the {@link #onPluginLoaded(Model,Plugin)} event for all plugins that subscribed to it.
+	 * @param m  the model that triggered the event
+	 */
+	public static void pluginLoaded(Model m, Plugin p) {
+		m.call("onPluginLoaded", View.class, new Class[] {Model.class, Plugin.class}, new Object[] {m, p});
+	}
+	
+	
+	/**
+	 * All plugins have been loaded.
+	 * 
+	 * @param m the model this event is called from.
+	 */
+	default public void onPluginsLoaded(Model m)  {}
+	
+	/**
+	 * Call the {@link #onPluginsLoaded(Model)} event for all plugins that subscribed to it.
+	 * @param m  the model that triggered the event
+	 */
+	public static void pluginsLoaded(Model m) {
+		m.call("onPluginsLoaded", View.class, new Class[] {Model.class}, new Object[] {m});
+	}
+	
+	
 
 	/**
 	 * Return the name of the plugin.

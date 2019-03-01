@@ -17,6 +17,9 @@ public abstract class Model {
 	
 	/** A hashmap of lists for blacklisting plugins for specific events after they throw an exception. */
 	private HashMap<String, List<Plugin>> blackList;
+	
+	/** A thread for sending events needed regullary. */
+	private Thread gameLoop;
 
 	/** Create a new Model and initialize it. */
 	public Model() {
@@ -29,6 +32,35 @@ public abstract class Model {
 	 * A method for initializing this model by setting a start level.
 	 */
 	public abstract void init();
+	
+	/**
+	 * A method meant to be executed after all plugins have been loaded into the Model.
+	 */
+	public void start() {
+		Plugin.pluginsLoaded(this);
+		gameLoop = new Thread(new Runnable() {
+			public void run() {
+				try {
+					while(true) {
+						View.update(Model.this);
+						Thread.sleep(1000/30);
+					}
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		gameLoop.start();
+	}
+	
+	/**
+	 * A methjod meant to be executed when the kill event has been triggered.
+	 */
+	@SuppressWarnings("deprecation")
+	protected void stop() {
+		if(gameLoop != null && gameLoop.isAlive())
+			gameLoop.stop();
+	}
 
 	/**
 	 * Return the current level of this model.
@@ -59,6 +91,7 @@ public abstract class Model {
 
 	/**
 	 * Register, initialize and load a plugin into this model.
+	 * Also trigger an event that the plugin has been loaded globally.
 	 * 
 	 * @param plugin the plugin to register.
 	 */
@@ -71,6 +104,7 @@ public abstract class Model {
 		}catch(Exception e) {
 			new RuntimeException(plugin.getName(),e).printStackTrace(); // print out the exception with plugin context
 		}
+		Plugin.pluginLoaded(this, plugin);
 	}
 	
 	/**
