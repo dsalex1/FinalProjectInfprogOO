@@ -24,6 +24,7 @@ public class LightHouseSimulator extends JPanel {
 	private BufferedImage redOverlay = null;
 	private BufferedImage greenOverlay = null;
 	private BufferedImage blueOverlay = null;
+	private BufferedImage currentFrame = null;
 	private Mapping mode = Mapping.MAPPED;
 	private JFrame frame = null;
 	private int[] directData = new int[14 * 28 * 3];
@@ -50,16 +51,19 @@ public class LightHouseSimulator extends JPanel {
 		frame.add(this);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
-	
-	
+
 	public int[] getDirectData() {
 		return directData;
 	}
-	
 
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
+		g.drawImage(currentFrame, 0, 0, this);
+	}
+
+	public void render() {
+
 		BufferedImage currentImg = new BufferedImage(BackgroundImage.getWidth(), BackgroundImage.getHeight(),
 				BufferedImage.TYPE_3BYTE_BGR);
 
@@ -73,8 +77,7 @@ public class LightHouseSimulator extends JPanel {
 				blendAt((int) (290 + 18.7037 * x), (int) (84 + 42 * y), directData[(x + y * 28) * 3 + 0],
 						directData[(x + y * 28) * 3 + 1], directData[(x + y * 28) * 3 + 2], currentImg);
 			}
-
-		g.drawImage(currentImg, 0, 0, this);
+		currentFrame = currentImg;
 	}
 
 	private void blendAt(int destX, int destY, int rFactor, int gFactor, int bFactor, BufferedImage img) {
@@ -118,6 +121,12 @@ public class LightHouseSimulator extends JPanel {
 	 * @param data the Image to be displayed
 	 */
 	public void setData(BufferedImage data) {
+		new Thread(() -> {
+			setDataSync(data);
+		}).start();
+	}
+
+	public void setDataSync(BufferedImage data) {
 		if (mode == Mapping.MAPPED) {
 			setMappedData(data);
 		}
@@ -126,6 +135,7 @@ public class LightHouseSimulator extends JPanel {
 				throw new IllegalArgumentException("Data must have dimensions 28x14 for direct mapping.");
 			setDirectData(data);
 		}
+		render();
 		this.repaint();
 	}
 
@@ -178,7 +188,7 @@ public class LightHouseSimulator extends JPanel {
 	}
 
 	private static BufferedImage resize(BufferedImage img, int width, int height) {
-		Image tmp = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+		Image tmp = img.getScaledInstance(width, height, Image.SCALE_FAST);
 		BufferedImage resized = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2d = resized.createGraphics();
 		g2d.drawImage(tmp, 0, 0, null);

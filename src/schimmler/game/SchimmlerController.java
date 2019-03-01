@@ -93,6 +93,8 @@ public class SchimmlerController implements Plugin {
 							// TODO: dont really set it to the place
 							tile.setX(tile.getX() + deltas[0]);
 							tile.setY(tile.getY() + deltas[1]);
+							dragStart[0] += deltas[0];
+							dragStart[1] += deltas[1];
 							InputPlugin.tileMoved(model, tile, name, tile.getX(), tile.getY());
 						}
 					}
