@@ -29,7 +29,7 @@ public interface Plugin {
 	 * @param m  the model that triggered the event
 	 */
 	public static void kill(Model m) {
-		m.call("onKill", View.class, new Class[] {Model.class}, new Object[] {m});
+		m.call("onKill", Plugin.class, new Class[] {Model.class}, new Object[] {m});
 		m.stop();
 	}
 	
@@ -47,7 +47,7 @@ public interface Plugin {
 	 * @param m  the model that triggered the event
 	 */
 	public static void pluginLoaded(Model m, Plugin p) {
-		m.call("onPluginLoaded", View.class, new Class[] {Model.class, Plugin.class}, new Object[] {m, p});
+		m.call("onPluginLoaded", Plugin.class, new Class[] {Model.class, Plugin.class}, new Object[] {m, p});
 	}
 	
 	
@@ -63,7 +63,7 @@ public interface Plugin {
 	 * @param m  the model that triggered the event
 	 */
 	public static void pluginsLoaded(Model m) {
-		m.call("onPluginsLoaded", View.class, new Class[] {Model.class}, new Object[] {m});
+		m.call("onPluginsLoaded", Plugin.class, new Class[] {Model.class}, new Object[] {m});
 	}
 	
 	

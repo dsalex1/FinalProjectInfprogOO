@@ -106,10 +106,5 @@ public class SchimmlerController implements Plugin {
 		return "SchimmlerController";
 	}
 
-	@SuppressWarnings("deprecation")
-	@Override
-	public void onKill(Model m) {
-
-	}
 
 }
