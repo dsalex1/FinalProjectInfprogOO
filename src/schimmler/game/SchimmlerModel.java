@@ -2,7 +2,6 @@ package schimmler.game;
 
 import schimmler.architecture.Level;
 import schimmler.architecture.Model;
-import schimmler.test.TestController;
 
 public class SchimmlerModel extends Model {
 
@@ -65,7 +64,7 @@ public class SchimmlerModel extends Model {
 	public static void main(String[] args) {
 		SchimmlerModel model = new SchimmlerModel();
 		model.registerPlugin(new SchimmlerView());
-		model.registerPlugin(new TestController());
+		model.registerPlugin(new SchimmlerController());
 		System.out.println(model.getPlugins());
 	}
 
