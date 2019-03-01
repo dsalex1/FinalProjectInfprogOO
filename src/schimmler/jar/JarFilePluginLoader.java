@@ -2,20 +2,15 @@ package schimmler.jar;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FileReader;
 import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
 import schimmler.architecture.Plugin;
 import schimmler.architecture.PluginLoader;
 
