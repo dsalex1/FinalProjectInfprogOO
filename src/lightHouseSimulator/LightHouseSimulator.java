@@ -7,8 +7,6 @@ import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
-import java.util.Objects;
-
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -26,7 +24,8 @@ enum Mapping {
 public class LightHouseSimulator extends JPanel {
 	
 	private BufferedImage currentImg;
-	private BufferedImage BackgroundImage = null;
+	
+	private BufferedImage backgroundImage = null;
 	private BufferedImage redOverlay = null;
 	private BufferedImage greenOverlay = null;
 	private BufferedImage blueOverlay = null;
@@ -44,10 +43,11 @@ public class LightHouseSimulator extends JPanel {
 	public LightHouseSimulator() {
 		super();
 		try {
-			BackgroundImage = ImageIO.read(new File(getClass().getResource("background.png").getFile()));
+			backgroundImage = ImageIO.read(new File(getClass().getResource("background.png").getFile()));
 
-			currentImg = new BufferedImage(BackgroundImage.getWidth(), BackgroundImage.getHeight(),
+			currentImg = new BufferedImage(backgroundImage.getWidth(), backgroundImage.getHeight(),
 					BufferedImage.TYPE_INT_ARGB);
+			
 			
 			redOverlay = ImageIO.read(new File(getClass().getResource("red.png").getFile()));
 			greenOverlay = ImageIO.read(new File(getClass().getResource("green.png").getFile()));
@@ -56,7 +56,7 @@ public class LightHouseSimulator extends JPanel {
 			e.printStackTrace();
 		}
 		frame = new JFrame();
-		frame.setSize(BackgroundImage.getWidth(this), BackgroundImage.getHeight(this));
+		frame.setSize(backgroundImage.getWidth(this), backgroundImage.getHeight(this));
 		frame.setVisible(true);
 		frame.add(this);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -80,20 +80,22 @@ public class LightHouseSimulator extends JPanel {
 		
 		Graphics2D g2d = (Graphics2D) currentImg.createGraphics();
 
-		g2d.drawImage(BackgroundImage, 0, 0, null);
+		g2d.drawImage(backgroundImage, 0, 0, null);
+		
+		AdditiveComposite comp = new AdditiveComposite();
 		
 	    for (int x = 0; x < 28; x++)
 			for (int y = 0; y < 14; y++) {
 				if(directData[(x + y * 28) * 3 + 0] > 0) {
-					g2d.setComposite(new AdditiveComposite(directData[(x + y * 28) * 3 + 0]/255f));
+					g2d.setComposite(comp.setFactor(directData[(x + y * 28) * 3 + 0]/255f));
 					g2d.drawImage(redOverlay, (int)(290 + 18.7037 * x), (84 + 42 * y), null);
 				}
 				if(directData[(x + y * 28) * 3 + 1] > 0) {
-					g2d.setComposite(new AdditiveComposite(directData[(x + y * 28) * 3 + 1]/255f));
+					g2d.setComposite(comp.setFactor(directData[(x + y * 28) * 3 + 1]/255f));
 					g2d.drawImage(greenOverlay, (int)(290 + 18.7037 * x), (84 + 42 * y), null);
 				}
 				if(directData[(x + y * 28) * 3 + 2] > 0) {
-					g2d.setComposite(new AdditiveComposite(directData[(x + y * 28) * 3 + 2]/255f));
+					g2d.setComposite(comp.setFactor(directData[(x + y * 28) * 3 + 2]/255f));
 					g2d.drawImage(blueOverlay, (int)(290 + 18.7037 * x), (84 + 42 * y), null);
 				}
 					
@@ -119,7 +121,7 @@ public class LightHouseSimulator extends JPanel {
 		currentFrame = currentImg;
 	}
 
-	private void blendAt(int destX, int destY, int rFactor, int gFactor, int bFactor, BufferedImage img) {
+	/*private void blendAt(int destX, int destY, int rFactor, int gFactor, int bFactor, BufferedImage img) {
 		for (int x = 0; x < redOverlay.getWidth(); x++)
 			for (int y = 0; y < redOverlay.getHeight(); y++) {
 				Color backPixel = new Color(img.getRGB(x + destX, y + destY));
@@ -142,7 +144,7 @@ public class LightHouseSimulator extends JPanel {
 					b = 255;
 				img.setRGB(destX + x, destY + y, r << 16 | g << 8 | b);
 			}
-	}
+	}*/
 
 	/**
 	 * Sets the image data to display on the LightHouse.
@@ -258,10 +260,19 @@ public class LightHouseSimulator extends JPanel {
 }
 
 class AdditiveComposite implements Composite {
-    private final float factor;
+    private float factor;
+    
+    public AdditiveComposite() {
+        this.factor = 0f;
+    }
 
     public AdditiveComposite(float factor) {
-        this.factor = Objects.requireNonNull(factor);
+        this.factor = factor;
+    }
+    
+    public AdditiveComposite setFactor(float factor) {
+    	this.factor = factor;
+    	return this;
     }
 
     public CompositeContext createContext(ColorModel srcColorModel,
@@ -271,10 +282,10 @@ class AdditiveComposite implements Composite {
 }
 
 class AdditiveCompositeContext implements CompositeContext {
-    private final float factor;
+    private float factor;
 
-    public AdditiveCompositeContext(final float factor) {
-        this.factor = Objects.requireNonNull(factor);
+    public AdditiveCompositeContext(float factor) {
+        this.factor = factor;
     }
 
     public void compose(Raster src, Raster dstIn, WritableRaster dstOut) {
@@ -287,15 +298,9 @@ class AdditiveCompositeContext implements CompositeContext {
             for (int y = 0; y < dstIn.getHeight(); y++) {
                 pxSrc = src.getPixel(x, y, pxSrc);
                 pxDst = dstIn.getPixel(x, y, pxDst);
-                for(int i=0;i<3;i++)
-                	pxSrc[i] = (int)(pxSrc[i] * factor);
                 
-                
-                int alpha = pxSrc.length > 3? alpha = pxSrc[3] : 255;
-
-
                 for (int i = 0; i < 3 && i < chans; i++) {
-                    pxDst[i] = Math.min(255, (pxSrc[i] * alpha / 255) + (pxDst[i]));
+                    pxDst[i] = Math.min(255, (int)(pxSrc[i] * factor) + (pxDst[i]));
                     dstOut.setPixel(x, y, pxDst);
                 }
             }
