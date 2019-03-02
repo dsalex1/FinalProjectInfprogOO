@@ -18,8 +18,7 @@ public class TestModel extends Model {
 
 	@Override
 	public void init() {
-		
-		
+
 		registerTileType("square", new TileType() {
 			@Override
 			public boolean fieldOccupiedRelative(Tile tile, int cx, int cy) {
@@ -32,7 +31,7 @@ public class TestModel extends Model {
 				return (cx == 0 && cy == 0) || (cx == 1 && cy == 0) || (cx == 0 && cy == 1);
 			}
 		});
-		
+
 		registerLevelType("test", new LevelType() {
 			@Override
 			public void init(Level level) {
@@ -48,7 +47,7 @@ public class TestModel extends Model {
 			}
 
 		});
-		
+
 		setLevel(createLevel("test"));
 	}
 
@@ -56,8 +55,8 @@ public class TestModel extends Model {
 		TestModel model = new TestModel();
 		model.registerPlugin(new TestView());
 		model.registerPlugin(new TestController());
-		model.loadPlugins(new JavaScriptPluginLoader(new File(System.getProperty("user.dir")+"/plugins/")));
-		model.loadPlugins(new JarFilePluginLoader(new File(System.getProperty("user.dir")+"/plugins/")));
+		model.loadPlugins(new JavaScriptPluginLoader(new File(System.getProperty("user.dir") + "/plugins/")));
+		model.loadPlugins(new JarFilePluginLoader(new File(System.getProperty("user.dir") + "/plugins/")));
 		System.out.println(model.getPlugins());
 		model.start();
 	}

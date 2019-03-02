@@ -44,8 +44,7 @@ public class SchimmlerController implements Plugin {
 
 						int[] deltas = getClosestViableDelta(name, dragEnd[0], dragEnd[1]);
 						if (deltas != null) {
-							tile.setX(tile.getX() + deltas[0]);
-							tile.setY(tile.getY() + deltas[1]);
+							model.setTilePosition(name, tile.getX() + deltas[0], tile.getY() + deltas[1]);
 							InputPlugin.tileMoved(model, tile, name, tile.getX(), tile.getY());
 						}
 
@@ -90,8 +89,7 @@ public class SchimmlerController implements Plugin {
 						int[] deltas = getClosestViableDelta(name, dragEnd[0], dragEnd[1]);
 						if (deltas != null) {
 							// TODO: dont really set it to the place
-							tile.setX(tile.getX() + deltas[0]);
-							tile.setY(tile.getY() + deltas[1]);
+							model.setTilePosition(name, tile.getX() + deltas[0], tile.getY() + deltas[1]);
 							dragStart[0] += deltas[0];
 							dragStart[1] += deltas[1];
 							InputPlugin.tileMoved(model, tile, name, tile.getX(), tile.getY());

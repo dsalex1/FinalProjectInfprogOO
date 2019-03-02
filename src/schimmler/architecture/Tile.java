@@ -8,10 +8,10 @@ public final class Tile {
 
 	/** The most top y position of this tile. (lowest y) */
 	protected int y;
-	
+
 	/** The type of this tile */
 	protected TileType type;
-	
+
 	/**
 	 * Create a new tile with given coordinates.
 	 * 
@@ -29,7 +29,7 @@ public final class Tile {
 	 * 
 	 * @param x the new x position of this tile.
 	 */
-	public void setX(int x) {
+	protected void setX(int x) {
 		this.x = x;
 	}
 
@@ -38,7 +38,7 @@ public final class Tile {
 	 * 
 	 * @param y the new y position of this tile.
 	 */
-	public void setY(int y) {
+	protected void setY(int y) {
 		this.y = y;
 	}
 
@@ -59,16 +59,16 @@ public final class Tile {
 	public int getY() {
 		return y;
 	}
-	
+
 	/**
 	 * Return the tile type of this tile.
+	 * 
 	 * @return the type of tile this is.
 	 */
 	public TileType getType() {
 		return type;
 	}
 
-	
 	/**
 	 * Return whether a given relative position is taken up by this tile.
 	 * 
@@ -79,7 +79,7 @@ public final class Tile {
 	public boolean fieldOccupiedRelative(int cx, int cy) {
 		return type.fieldOccupiedRelative(this, cx, cy);
 	}
-	
+
 	/**
 	 * Return whether a given absolute position is taken up by this tile.
 	 * 
@@ -88,7 +88,7 @@ public final class Tile {
 	 * @return whether this tile is at the given position.
 	 */
 	public boolean fieldOccupied(int cx, int cy) {
-		return type.fieldOccupiedRelative(this, cx-this.x, cy-this.y);
+		return type.fieldOccupiedRelative(this, cx - this.x, cy - this.y);
 	}
 
 }

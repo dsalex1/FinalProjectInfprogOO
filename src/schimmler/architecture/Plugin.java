@@ -75,6 +75,27 @@ public interface Plugin {
 	}
 
 	/**
+	 * Event fired when the current level is won
+	 * 
+	 * @param m the model this event is called from
+	 * @param x the x position of the cursor
+	 * @param y the y position of the cursor
+	 */
+	default public void onWon(Model m) {
+	}
+
+	/**
+	 * Call the {@link #onWon(Model)} event for all plugins that subscribed to it.
+	 * 
+	 * @param m the model this event is called from.
+	 * @param x the x position of the cursor
+	 * @param y the y position of the cursor
+	 */
+	public static void won(Model m) {
+		m.call("onWon", InputPlugin.class, new Class[] { Model.class }, new Object[] { m });
+	}
+
+	/**
 	 * Return the name of the plugin. This method *MUST* be implemented by all
 	 * plugins.
 	 * 

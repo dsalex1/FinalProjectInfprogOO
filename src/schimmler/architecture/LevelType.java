@@ -2,27 +2,29 @@ package schimmler.architecture;
 
 import java.util.Map.Entry;
 
-/** An abstract type of level providing the creation of it, a possible reload handler and a win condition. */
+/**
+ * An abstract type of level providing the creation of it, a possible reload
+ * handler and a win condition.
+ */
 public abstract class LevelType {
 
-
 	/** Create a new Level Type and initialize it. */
-	public LevelType() {}
-	
-	
+	public LevelType() {
+	}
+
 	/**
-	 * A method for initializing a level by placing the tiles and setting the width and height.
+	 * A method for initializing a level by placing the tiles and setting the width
+	 * and height.
 	 */
 	public abstract void init(Level level);
-	
+
 	/**
 	 * Returns true if a level has been finished successfully.
+	 * 
 	 * @return return if the level was completed correctly.
 	 */
 	public abstract boolean won(Level level);
 
-	
-	
 	/**
 	 * Return the identifier of the field that occupies the given x and y position
 	 * and exclude a given identifier for a given level (null if the field is free).
@@ -43,6 +45,16 @@ public abstract class LevelType {
 		return null;
 	}
 
+	/**
+	 * Returns whether a tile can move in a straigt line to (x,y) wihtout colliding
+	 * with other tiles
+	 * 
+	 * @param level the level to run this at
+	 * @param name  name of the tile to check
+	 * @param x     target x to check for
+	 * @param y     target y to check for
+	 * @return whether a tile may move to this coordinates without collision
+	 */
 	public boolean canTileMoveTo(Level level, String name, int x, int y) {
 		Tile tile = level.getTile(name);
 		int oX = tile.getX();

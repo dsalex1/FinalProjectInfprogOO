@@ -12,13 +12,15 @@ public final class Level {
 
 	/** The height of this level. */
 	protected int height;
-	
+
 	/** The tiles present in this level where each tile has a unique identifier. */
 	protected Map<String, Tile> tiles;
 
-	/** The identifier of the currently selected tile, null if no tile is selected. */
+	/**
+	 * The identifier of the currently selected tile, null if no tile is selected.
+	 */
 	protected String selected;
-	
+
 	/** The type of this level. */
 	protected LevelType type;
 
@@ -27,15 +29,16 @@ public final class Level {
 		tiles = new HashMap<String, Tile>();
 		this.type = type;
 	}
-	
+
 	/**
 	 * Return the type of this level.
+	 * 
 	 * @return the type of this level.
 	 */
 	public LevelType getType() {
 		return type;
 	}
-	
+
 	/**
 	 * Return the width of this level.
 	 * 
@@ -44,9 +47,10 @@ public final class Level {
 	public int getWidth() {
 		return width;
 	}
-	
+
 	/**
 	 * Set the width of this level.
+	 * 
 	 * @param width the new width of this level
 	 */
 	public void setWidth(int width) {
@@ -61,9 +65,10 @@ public final class Level {
 	public int getHeight() {
 		return height;
 	}
-	
+
 	/**
 	 * Set the height of this level.
+	 * 
 	 * @param height the new height of this level
 	 */
 	public void setHeight(int height) {
@@ -156,7 +161,7 @@ public final class Level {
 	 * @return the found fields identifier or null if it is free.
 	 */
 	public String fieldOccupied(int x, int y, String exclude) {
-		return type.fieldOccupied(this,x, y, exclude);
+		return type.fieldOccupied(this, x, y, exclude);
 	}
 
 	/**
@@ -168,9 +173,18 @@ public final class Level {
 	 * @return the found fields identifer or null if it is free.
 	 */
 	public String fieldOccupied(int x, int y) {
-		return type.fieldOccupied(this,x, y, null);
+		return type.fieldOccupied(this, x, y, null);
 	}
-	
+
+	/**
+	 * Returns whether a tile can move in a straigt line to (x,y) wihtout colliding
+	 * with other tiles
+	 * 
+	 * @param name name of the tile to check
+	 * @param x    target x to check for
+	 * @param y    target y to check for
+	 * @return whether a tile may move to this coordinates without collision
+	 */
 	public boolean canTileMoveTo(String name, int x, int y) {
 		return type.canTileMoveTo(this, name, x, y);
 	}

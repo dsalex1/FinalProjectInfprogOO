@@ -12,64 +12,65 @@ public class SchimmlerModel extends Model {
 
 	@Override
 	public void init() {
-		
-		registerTileType("square",  new MatrixTileType() {
+
+		registerTileType("square", new MatrixTileType() {
 			@Override
 			public int[][] getGeometryMatrix() {
 				int[][] geometry = { { 1, 1 }, { 1, 1 } };
 				return geometry;
 			}
 		});
-		registerTileType("hookUL",  new MatrixTileType() {
+		registerTileType("hookUL", new MatrixTileType() {
 			@Override
 			public int[][] getGeometryMatrix() {
 				int[][] geometry = { { 1, 1 }, { 1, 0 } };
 				return geometry;
 			}
 		});
-		
-		registerTileType("hookUR",  new MatrixTileType() {
+
+		registerTileType("hookUR", new MatrixTileType() {
 			@Override
 			public int[][] getGeometryMatrix() {
-				int[][] geometry = { { 1, 1 }, { 0, 1} };
+				int[][] geometry = { { 1, 1 }, { 0, 1 } };
 				return geometry;
 			}
 		});
-		
-		registerTileType("hookBL",  new MatrixTileType() {
+
+		registerTileType("hookBL", new MatrixTileType() {
 			@Override
 			public int[][] getGeometryMatrix() {
-				int[][] geometry = { { 1, 0 }, { 1, 1} };
+				int[][] geometry = { { 1, 0 }, { 1, 1 } };
 				return geometry;
 			}
 		});
-		
-		registerTileType("hookBR",  new MatrixTileType() {
+
+		registerTileType("hookBR", new MatrixTileType() {
 			@Override
 			public int[][] getGeometryMatrix() {
-				int[][] geometry = { { 0, 1 }, { 1, 1} };
+				int[][] geometry = { { 0, 1 }, { 1, 1 } };
 				return geometry;
 			}
 		});
-		
+
 		registerLevelType("schimmler", new LevelType() {
 			@Override
 			public void init(Level level) {
 				level.setWidth(4);
 				level.setHeight(6);
-				level.addTile("square", createTile("square",1,1));
-				level.addTile("hookUL", createTile("hookUL",0,0));
-				level.addTile("hookUR", createTile("hookUR",2,0));
-				level.addTile("hookBL", createTile("hookBL",0,2));
-				level.addTile("hookBR", createTile("hookBR",2,2));
+				level.addTile("square", createTile("square", 1, 1));
+				level.addTile("hookUL", createTile("hookUL", 0, 0));
+				level.addTile("hookUR", createTile("hookUR", 2, 0));
+				level.addTile("hookBL", createTile("hookBL", 0, 2));
+				level.addTile("hookBR", createTile("hookBR", 2, 2));
 			}
 
 			@Override
 			public boolean won(Level level) {
-				return level.getTile("square").getX() == 1 || level.getTile("square").getY() == 4;
+				return level.getTile("square").getX() == 0 && level.getTile("square").getY() == 2;
 			}
+
 		});
-		
+
 		setLevel(createLevel("schimmler"));
 
 	}
