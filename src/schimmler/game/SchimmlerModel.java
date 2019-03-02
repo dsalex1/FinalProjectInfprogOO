@@ -79,7 +79,6 @@ public class SchimmlerModel extends Model {
 		SchimmlerModel model = new SchimmlerModel();
 		model.registerPlugin(new SchimmlerView());
 		model.registerPlugin(new SchimmlerController());
-		System.out.println(model.getPlugins());
 		model.start();
 	}
 

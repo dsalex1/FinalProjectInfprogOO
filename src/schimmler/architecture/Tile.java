@@ -1,7 +1,7 @@
 package schimmler.architecture;
 
 /** A Tile in a map */
-public final class Tile {
+public final class Tile implements Cloneable {
 
 	/** The most left x position of this tile. (lowest x) */
 	protected int x;
@@ -89,6 +89,22 @@ public final class Tile {
 	 */
 	public boolean fieldOccupied(int cx, int cy) {
 		return type.fieldOccupiedRelative(this, cx - this.x, cy - this.y);
+	}
+	
+	@Override
+	public Tile clone() {
+		Tile clone = new Tile(this.x, this.y, this.getType());
+		return clone;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj == null) return false;
+		if(obj.getClass() != this.getClass()) return false;
+		Tile tile = (Tile) obj;
+		if(tile.getX() != this.getX() || tile.getY() != this.getY()) return false;
+		if(tile.getType() != this.getType()) return false;
+		return true;
 	}
 
 }

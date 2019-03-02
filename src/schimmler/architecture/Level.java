@@ -3,9 +3,10 @@ package schimmler.architecture;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 /** A level containing given tiles that are movable to reach a win condition. */
-public final class Level {
+public final class Level implements Cloneable {
 
 	/** The width of this level. */
 	protected int width;
@@ -187,6 +188,29 @@ public final class Level {
 	 */
 	public boolean canTileMoveTo(String name, int x, int y) {
 		return type.canTileMoveTo(this, name, x, y);
+	}
+	
+	@Override
+	public Level clone() {
+		Level clone = new Level(this.getType());
+		clone.setWidth(this.width);
+		clone.setHeight(this.height);
+		for(Entry<String, Tile> e:this.getTileMap().entrySet())
+			clone.addTile(e.getKey(), e.getValue().clone());
+		clone.setSelected(this.selected);
+		return clone;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj == null) return false;
+		if(obj.getClass() != this.getClass()) return false;
+		Level level = (Level) obj;
+		if(level.getWidth() != this.getWidth() || level.getHeight() != this.getHeight()) return false;
+		if(!level.getSelected().equals(this.getSelected())) return false;
+		if(level.getType() != this.getType()) return false;
+		if(!level.getTileMap().equals(this.getTileMap())) return false;
+		return true;
 	}
 
 }

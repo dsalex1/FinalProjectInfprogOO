@@ -18,7 +18,7 @@ import schimmler.architecture.View;
 @SuppressWarnings("serial")
 public class SchimmlerView extends JPanel implements GraphicalView, InputPlugin {
 
-	private static final Boolean SHOW_LIGHTHOUSE = false;
+	private static final Boolean SHOW_LIGHTHOUSE = true;
 	private static final int SUBPIXEL_COUNT = 20;
 	private static final int WIDTH = 28 * SUBPIXEL_COUNT;
 	private static final int HEIGHT = 14 * 2 * SUBPIXEL_COUNT;
