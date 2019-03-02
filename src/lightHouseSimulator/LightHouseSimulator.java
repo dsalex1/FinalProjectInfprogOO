@@ -2,8 +2,12 @@ package lightHouseSimulator;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.Raster;
+import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -20,6 +24,8 @@ enum Mapping {
  * https://www.kunstgeschichte.uni-kiel.de/de/kunstcampus-kiel/verwaltungshochhaus-projekt-lighthouse
  */
 public class LightHouseSimulator extends JPanel {
+	
+	private BufferedImage currentImg;
 	private BufferedImage BackgroundImage = null;
 	private BufferedImage redOverlay = null;
 	private BufferedImage greenOverlay = null;
@@ -39,6 +45,10 @@ public class LightHouseSimulator extends JPanel {
 		super();
 		try {
 			BackgroundImage = ImageIO.read(new File(getClass().getResource("background.png").getFile()));
+
+			currentImg = new BufferedImage(BackgroundImage.getWidth(), BackgroundImage.getHeight(),
+					BufferedImage.TYPE_INT_ARGB);
+			
 			redOverlay = ImageIO.read(new File(getClass().getResource("red.png").getFile()));
 			greenOverlay = ImageIO.read(new File(getClass().getResource("green.png").getFile()));
 			blueOverlay = ImageIO.read(new File(getClass().getResource("blue.png").getFile()));
@@ -61,9 +71,36 @@ public class LightHouseSimulator extends JPanel {
 		super.paintComponent(g);
 		g.drawImage(currentFrame, 0, 0, this);
 	}
+	
+	
+	
 
 	public void render() {
 
+		
+		Graphics2D g2d = (Graphics2D) currentImg.createGraphics();
+
+		g2d.drawImage(BackgroundImage, 0, 0, null);
+		
+	    for (int x = 0; x < 28; x++)
+			for (int y = 0; y < 14; y++) {
+				if(directData[(x + y * 28) * 3 + 0] > 0) {
+					g2d.setComposite(new AdditiveComposite(directData[(x + y * 28) * 3 + 0]/255f));
+					g2d.drawImage(redOverlay, (int)(290 + 18.7037 * x), (84 + 42 * y), null);
+				}
+				if(directData[(x + y * 28) * 3 + 1] > 0) {
+					g2d.setComposite(new AdditiveComposite(directData[(x + y * 28) * 3 + 1]/255f));
+					g2d.drawImage(greenOverlay, (int)(290 + 18.7037 * x), (84 + 42 * y), null);
+				}
+				if(directData[(x + y * 28) * 3 + 2] > 0) {
+					g2d.setComposite(new AdditiveComposite(directData[(x + y * 28) * 3 + 2]/255f));
+					g2d.drawImage(blueOverlay, (int)(290 + 18.7037 * x), (84 + 42 * y), null);
+				}
+					
+		}
+	    g2d.dispose();
+
+		/*
 		BufferedImage currentImg = new BufferedImage(BackgroundImage.getWidth(), BackgroundImage.getHeight(),
 				BufferedImage.TYPE_3BYTE_BGR);
 
@@ -77,6 +114,8 @@ public class LightHouseSimulator extends JPanel {
 				blendAt((int) (290 + 18.7037 * x), (int) (84 + 42 * y), directData[(x + y * 28) * 3 + 0],
 						directData[(x + y * 28) * 3 + 1], directData[(x + y * 28) * 3 + 2], currentImg);
 			}
+		*/
+		
 		currentFrame = currentImg;
 	}
 
@@ -121,9 +160,7 @@ public class LightHouseSimulator extends JPanel {
 	 * @param data the Image to be displayed
 	 */
 	public void setData(BufferedImage data) {
-		new Thread(() -> {
 			setDataSync(data);
-		}).start();
 	}
 
 	public void setDataSync(BufferedImage data) {
@@ -218,4 +255,52 @@ public class LightHouseSimulator extends JPanel {
 		mode = Mapping.DIRECT;
 	}
 
+}
+
+class AdditiveComposite implements Composite {
+    private final float factor;
+
+    public AdditiveComposite(float factor) {
+        this.factor = Objects.requireNonNull(factor);
+    }
+
+    public CompositeContext createContext(ColorModel srcColorModel,
+            ColorModel dstColorModel, RenderingHints hints) {
+        return new AdditiveCompositeContext(factor);
+    }
+}
+
+class AdditiveCompositeContext implements CompositeContext {
+    private final float factor;
+
+    public AdditiveCompositeContext(final float factor) {
+        this.factor = Objects.requireNonNull(factor);
+    }
+
+    public void compose(Raster src, Raster dstIn, WritableRaster dstOut) {
+    	
+        int[] pxSrc = new int[src.getNumBands()];
+        int[] pxDst = new int[dstIn.getNumBands()];
+        int chans = Math.min(src.getNumBands(), dstIn.getNumBands());
+
+        for (int x = 0; x < dstIn.getWidth(); x++) {
+            for (int y = 0; y < dstIn.getHeight(); y++) {
+                pxSrc = src.getPixel(x, y, pxSrc);
+                pxDst = dstIn.getPixel(x, y, pxDst);
+                for(int i=0;i<3;i++)
+                	pxSrc[i] = (int)(pxSrc[i] * factor);
+                
+                
+                int alpha = pxSrc.length > 3? alpha = pxSrc[3] : 255;
+
+
+                for (int i = 0; i < 3 && i < chans; i++) {
+                    pxDst[i] = Math.min(255, (pxSrc[i] * alpha / 255) + (pxDst[i]));
+                    dstOut.setPixel(x, y, pxDst);
+                }
+            }
+        }
+    }
+
+    @Override public void dispose() { }
 }

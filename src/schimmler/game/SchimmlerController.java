@@ -75,7 +75,6 @@ public class SchimmlerController implements Plugin {
 
 					@Override
 					public void mouseDragged(MouseEvent e) {
-						log("test");
 						int[] dragEnd = ((GraphicalView) plugin).getLvlCoordAt(e.getX(), e.getY());
 
 						String name = model.getLevel().getSelected();
