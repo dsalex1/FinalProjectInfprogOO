@@ -184,7 +184,7 @@ public abstract class Model {
 		if (type == null)
 			throw new IllegalArgumentException("No TileType with the identifier '" + identifier + "' was found.");
 		Tile level = new Tile(x, y, type);
-		;
+		type.init(level);
 		return level;
 	}
 

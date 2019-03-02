@@ -2,6 +2,14 @@ package schimmler.architecture;
 
 /** A TileType to make tiles out of */
 public abstract class TileType {
+	
+	/**
+	 * A method for initializing a tile by setting custom data.
+	 * @param tile the tile to initialize
+	 */
+	public void init(Tile tile) {
+		
+	}
 
 	/**
 	 * Return whether a given relative position is taken up by a given tile.

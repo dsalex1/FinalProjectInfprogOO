@@ -1,7 +1,7 @@
 package schimmler.game;
 
 import java.util.HashMap;
-
+import java.util.Map.Entry;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import javax.swing.JFrame;
@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 import lightHouseSimulator.LightHouseSimulator;
 import schimmler.architecture.InputPlugin;
 import schimmler.architecture.Model;
+import schimmler.architecture.Tile;
 import schimmler.architecture.GraphicalView;
 import schimmler.architecture.View;
 
@@ -83,8 +84,13 @@ public class SchimmlerView extends JPanel implements GraphicalView, InputPlugin 
 
 		HashMap<String, Color> map = new HashMap<String, Color>();
 		int i = '0';
-		for (String s : m.getLevel().getTileMap().keySet())
-			map.put(s, new Color(Color.HSBtoRGB(0.2f * i++, 1, 1f)));
+		for(Entry<String,Tile> e:m.getLevel().getTileMap().entrySet()) {
+			map.put(e.getKey(), new Color(Color.HSBtoRGB(0.2f * i++, 1, 1f)));
+			if(e.getValue().getData().containsKey("color")) {
+				map.put(e.getKey(), Color.decode(e.getValue().getData().get("color")));
+			}
+		}
+		
 		map.put(null, Color.GRAY);
 
 		for (int column = 0; column < m.getLevel().getWidth(); column++)

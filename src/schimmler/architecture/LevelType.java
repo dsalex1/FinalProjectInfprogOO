@@ -8,13 +8,10 @@ import java.util.Map.Entry;
  */
 public abstract class LevelType {
 
-	/** Create a new Level Type and initialize it. */
-	public LevelType() {
-	}
-
 	/**
 	 * A method for initializing a level by placing the tiles and setting the width
 	 * and height.
+	 * @param level The level to initialize
 	 */
 	public abstract void init(Level level);
 

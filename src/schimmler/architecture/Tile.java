@@ -1,5 +1,8 @@
 package schimmler.architecture;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /** A Tile in a map */
 public final class Tile implements Cloneable {
 
@@ -8,9 +11,13 @@ public final class Tile implements Cloneable {
 
 	/** The most top y position of this tile. (lowest y) */
 	protected int y;
+	
+	/** A map containing custom data in string format. */
+	protected Map<String, String> data;
 
 	/** The type of this tile */
 	protected TileType type;
+	
 
 	/**
 	 * Create a new tile with given coordinates.
@@ -22,6 +29,7 @@ public final class Tile implements Cloneable {
 		this.x = x;
 		this.y = y;
 		this.type = type;
+		this.data = new HashMap<String, String>();
 	}
 
 	/**
@@ -68,6 +76,14 @@ public final class Tile implements Cloneable {
 	public TileType getType() {
 		return type;
 	}
+	
+	/**
+	 * Return a map of tags to data for custom data in tiles.
+	 * @return the map of tags to data
+	 */
+	public Map<String, String> getData() {
+		return data;
+	}
 
 	/**
 	 * Return whether a given relative position is taken up by this tile.
@@ -94,6 +110,7 @@ public final class Tile implements Cloneable {
 	@Override
 	public Tile clone() {
 		Tile clone = new Tile(this.x, this.y, this.getType());
+		clone.getData().putAll(this.getData());
 		return clone;
 	}
 	
@@ -104,6 +121,7 @@ public final class Tile implements Cloneable {
 		Tile tile = (Tile) obj;
 		if(tile.getX() != this.getX() || tile.getY() != this.getY()) return false;
 		if(tile.getType() != this.getType()) return false;
+		if(!tile.getData().equals(this.getData())) return false;
 		return true;
 	}
 

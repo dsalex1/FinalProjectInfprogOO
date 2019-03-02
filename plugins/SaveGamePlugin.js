@@ -22,6 +22,10 @@
 				tile["x"] = e.getValue().getX();
 				tile["y"] = e.getValue().getY();
 				tile["type"] = model.getTileTypeName(e.getValue().getType());
+				tile["data"] = {};
+				for each(d in e.getValue().getData().entrySet()) {
+					tile["data"][d.getKey()] = d.getValue();
+				}
 				saveGame["tiles"][e.getKey()] = tile;
 			}
 			
@@ -43,6 +47,9 @@
 			for each(e in Object.keys(saveGame["tiles"])) {
 				tileType = model.getTileType(saveGame["tiles"][e]["type"]);
 				tile = new Tile(saveGame["tiles"][e]["x"],saveGame["tiles"][e]["y"],tileType);
+				for each(d in Object.keys(saveGame["tiles"[e]["data"]])) {
+					tile.getData().put(d.getKey(), d.getValue())
+				}
 				level.addTile(e, tile);
 			}
 			level.setSelected(saveGame["selected"]);
