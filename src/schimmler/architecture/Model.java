@@ -58,9 +58,7 @@ public abstract class Model {
 						View.update(Model.this);
 						Thread.sleep(1000 / 30);
 					}
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+				} catch (InterruptedException e) {}
 			}
 		});
 		gameLoop.start();
@@ -76,6 +74,7 @@ public abstract class Model {
 				gameLoop.stop();
 		} catch (Exception e) {
 		}
+		plugins = new ArrayList<Plugin>(); // stop plugins from receiving events
 	}
 
 	/**
@@ -119,7 +118,7 @@ public abstract class Model {
 			// and one last update
 			View.update(Model.this);
 			Plugin.won(this);
-			stop();
+			Plugin.kill(this);
 		}
 	}
 
