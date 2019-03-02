@@ -1,5 +1,5 @@
 (function () {
-	var plugin = new (Java.extend(InputPlugin, {
+	var plugin = new (Java.extend(Plugin, InputPlugin, {
 		init: function(model) {
 			// don't trigger any events here as not all plugins are loaded and/or not initialized
 			plugin.log("Initialized Plugin");

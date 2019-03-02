@@ -1,5 +1,5 @@
 (function () {
-	var plugin = new (Java.extend(InputPlugin, {
+	var plugin = new (Java.extend(Plugin, InputPlugin, {
 		init: function(model) {
 		},
 		onTileSelected: function(model, tile, id) {
@@ -29,7 +29,7 @@
 			saveGame["width"] = model.getLevel().getWidth();
 			saveGame["height"] = model.getLevel().getHeight();
 			saveGame["selected"] = model.getLevel().getSelected();
-			
+
 			this.lastSave = JSON.stringify(saveGame);
 			plugin.log(this.lastSave);
 		},
