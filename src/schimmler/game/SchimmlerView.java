@@ -1,6 +1,7 @@
 package schimmler.game;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -79,37 +80,63 @@ public class SchimmlerView extends JPanel implements GraphicalView, InputPlugin 
 	private BufferedImage render(Model m) {
 		BufferedImage frame = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 
+		// if theres no level render nothing
 		if (m.getLevel() == null)
 			return frame;
 
-		HashMap<String, Color> map = new HashMap<String, Color>();
+		// map tiles to colors, so every tile has a different one
+		HashMap<String, Color> colorMap = new HashMap<String, Color>();
 		int i = '0';
-		for(Entry<String,Tile> e:m.getLevel().getTileMap().entrySet()) {
-			map.put(e.getKey(), new Color(Color.HSBtoRGB(0.2f * i++, 1, 1f)));
-			if(e.getValue().getData().containsKey("color")) {
-				map.put(e.getKey(), Color.decode(e.getValue().getData().get("color")));
+		for (String name : m.getLevel().getTileMap().keySet()) {
+			Map<String, String> tileData = m.getLevel().getTile(name).getData();
+			if (tileData.containsKey("color")) {
+				colorMap.put(name, Color.decode(tileData.get("color")));
+			} else {
+				colorMap.put(name, new Color(Color.HSBtoRGB(0.2f * i++, 1, 1f)));
 			}
 		}
-		
-		map.put(null, Color.GRAY);
 
-		for (int column = 0; column < m.getLevel().getWidth(); column++)
-			for (int row = 0; row < m.getLevel().getHeight(); row++) {
-				String tile = m.getLevel().fieldOccupied(column, row);
-				Color color = map.get(tile);
-				if (m.getLevel().getSelected() != null && m.getLevel().getSelected().equals(tile))
-					color = color.darker().darker();
+		// fill in playGround
+		fillGround(m, Color.gray, frame);
 
-				drawTile(column, row, color, frame);
-			}
+		// render static tiles (those whuch are not selected)
+		for (String tile : m.getLevel().getTileMap().keySet()) {
+			Color color = colorMap.get(tile);
+			if (m.getLevel().getSelected() != null && m.getLevel().getSelected().equals(tile))
+				continue;
+			drawTile(m, tile, color, frame);
+		}
 
+		// draw selected tile
+		String sel = m.getLevel().getSelected();
+		if (sel != null) {
+			Color color = colorMap.get(sel).darker().darker();
+			int[] offset = m.getLevel().getSelectedOffset();
+			drawTile(m, sel, color, frame, offset[0], offset[1]);
+		}
 		return frame;
+
 	}
 
-	private void drawTile(int column, int row, Color color, BufferedImage img) {
-		for (int x = 0; x < TILE_WIDTH; x++)
-			for (int y = 0; y < TILE_HEIGHT; y++)
-				img.setRGB(column * TILE_WIDTH + OFFSET_X + x, row * TILE_HEIGHT + OFFSET_Y + y, color.getRGB());
+	private void drawTile(Model m, String tile, Color color, BufferedImage img) {
+		drawTile(m, tile, color, img, 0, 0);
+	}
+
+	// TODO:this is not very efficient, nor pretty
+	private void drawTile(Model m, String tile, Color color, BufferedImage img, int offsetX, int offsetY) {
+		for (int column = 0; column < m.getLevel().getWidth(); column++)
+			for (int row = 0; row < m.getLevel().getHeight(); row++)
+				if (m.getLevel().fieldOccupied(column, row) == tile)
+					for (int x = 0; x < TILE_WIDTH; x++)
+						for (int y = 0; y < TILE_HEIGHT; y++)
+							img.setRGB(column * TILE_WIDTH + OFFSET_X + x + offsetX,
+									row * TILE_HEIGHT + OFFSET_Y + y + offsetY, color.getRGB());
+	}
+
+	private void fillGround(Model m, Color color, BufferedImage img) {
+		for (int x = 0; x < TILE_WIDTH * m.getLevel().getWidth(); x++)
+			for (int y = 0; y < TILE_HEIGHT * m.getLevel().getHeight(); y++)
+				img.setRGB(OFFSET_X + x, OFFSET_Y + y, color.getRGB());
 	}
 
 	@Override
@@ -130,5 +157,10 @@ public class SchimmlerView extends JPanel implements GraphicalView, InputPlugin 
 		int relX = (x - OFFSET_X) / TILE_WIDTH;
 		int relY = (y - OFFSET_Y) / TILE_HEIGHT;
 		return new int[] { relX, relY };
+	}
+
+	@Override
+	public int[] getPixelsPerTile() {
+		return new int[] { TILE_WIDTH, TILE_HEIGHT };
 	}
 }

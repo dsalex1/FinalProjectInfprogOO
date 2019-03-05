@@ -26,6 +26,7 @@ public class SchimmlerController implements Plugin {
 				MouseAdapter listener = new MouseAdapter() {
 
 					private int[] dragStart;
+					private int[] dragMouseStart;
 
 					@Override
 					public void mouseReleased(MouseEvent e) {
@@ -42,9 +43,37 @@ public class SchimmlerController implements Plugin {
 						if (tile == null)
 							return;
 
-						int[] deltas = getClosestViableDelta(name, dragEnd[0], dragEnd[1]);
-						if (deltas != null) {
-							model.setTilePosition(name, tile.getX() + deltas[0], tile.getY() + deltas[1]);
+						// proposed delta by mouse
+						int[] mouseDeltas = new int[] { e.getX() - dragMouseStart[0], e.getY() - dragMouseStart[1] };
+
+						// resict movement to one direction
+						if (Math.abs(mouseDeltas[0]) > Math.abs(mouseDeltas[1]))
+							mouseDeltas[1] = 0;
+						else
+							mouseDeltas[0] = 0;
+
+						// tile we point to
+						int[] dragTarget = ((GraphicalView) plugin).getLvlCoordAt(dragMouseStart[0] + mouseDeltas[0],
+								dragMouseStart[1] + mouseDeltas[1]);
+						// maximum delta we may go
+						int[] movementDeltas = getClosestViableDelta(name, dragTarget[0], dragTarget[1]);
+
+						// if we wouldnt move at all try again the other direction
+						if (movementDeltas[0] == 0 && movementDeltas[1] == 0) {
+							log("try other");
+							mouseDeltas = new int[] { e.getX() - dragMouseStart[0], e.getY() - dragMouseStart[1] };
+							if (Math.abs(mouseDeltas[0]) > Math.abs(mouseDeltas[1]))
+								mouseDeltas[0] = 0;
+							else
+								mouseDeltas[1] = 0;
+							dragTarget = ((GraphicalView) plugin).getLvlCoordAt(dragMouseStart[0] + mouseDeltas[0],
+									dragMouseStart[1] + mouseDeltas[1]);
+							movementDeltas = getClosestViableDelta(name, dragTarget[0], dragTarget[1]);
+						}
+
+						if (movementDeltas != null) {
+							model.setTilePosition(name, tile.getX() + movementDeltas[0],
+									tile.getY() + movementDeltas[1]);
 							InputPlugin.tileMoved(model, tile, name, tile.getX(), tile.getY());
 						}
 
@@ -57,6 +86,7 @@ public class SchimmlerController implements Plugin {
 					public void mousePressed(MouseEvent e) {
 						// find coordinates in the system of the model
 						dragStart = ((GraphicalView) plugin).getLvlCoordAt(e.getX(), e.getY());
+						dragMouseStart = new int[] { e.getX(), e.getY() };
 						// and get the corresponsing name of the tile
 						String name = model.getLevel().fieldOccupied(dragStart[0], dragStart[1]);
 
@@ -74,8 +104,6 @@ public class SchimmlerController implements Plugin {
 
 					@Override
 					public void mouseDragged(MouseEvent e) {
-						int[] dragEnd = ((GraphicalView) plugin).getLvlCoordAt(e.getX(), e.getY());
-
 						String name = model.getLevel().getSelected();
 
 						if (name == null)
@@ -86,14 +114,49 @@ public class SchimmlerController implements Plugin {
 						if (tile == null)
 							return;
 
-						int[] deltas = getClosestViableDelta(name, dragEnd[0], dragEnd[1]);
-						if (deltas != null) {
-							// TODO: dont really set it to the place
-							model.setTilePosition(name, tile.getX() + deltas[0], tile.getY() + deltas[1]);
-							dragStart[0] += deltas[0];
-							dragStart[1] += deltas[1];
-							InputPlugin.tileMoved(model, tile, name, tile.getX(), tile.getY());
+						// proposed delta by mouse
+						int[] mouseDeltas = new int[] { e.getX() - dragMouseStart[0], e.getY() - dragMouseStart[1] };
+
+						// resict movement to one direction
+						if (Math.abs(mouseDeltas[0]) > Math.abs(mouseDeltas[1]))
+							mouseDeltas[1] = 0;
+						else
+							mouseDeltas[0] = 0;
+
+						// tile we point to
+						int[] dragTarget = ((GraphicalView) plugin).getLvlCoordAt(dragMouseStart[0] + mouseDeltas[0],
+								dragMouseStart[1] + mouseDeltas[1]);
+						dragTarget[0] += (int) Math.signum(mouseDeltas[0]);
+						dragTarget[1] += (int) Math.signum(mouseDeltas[1]);
+
+						// maximum delta we may go
+						int[] movementDeltas = getClosestViableDelta(name, dragTarget[0], dragTarget[1]);
+
+						// if we wouldnt move at all try again the other direction
+						if (movementDeltas[0] == 0 && movementDeltas[1] == 0) {
+							log("try other");
+							mouseDeltas = new int[] { e.getX() - dragMouseStart[0], e.getY() - dragMouseStart[1] };
+							if (Math.abs(mouseDeltas[0]) > Math.abs(mouseDeltas[1]))
+								mouseDeltas[0] = 0;
+							else
+								mouseDeltas[1] = 0;
+							dragTarget = ((GraphicalView) plugin).getLvlCoordAt(dragMouseStart[0] + mouseDeltas[0],
+									dragMouseStart[1] + mouseDeltas[1]);
+							dragTarget[0] += (int) Math.signum(mouseDeltas[0]);
+							dragTarget[1] += (int) Math.signum(mouseDeltas[1]);
+							movementDeltas = getClosestViableDelta(name, dragTarget[0], dragTarget[1]);
 						}
+
+						// if we wanna go more than we may, restrict it
+						int[] pxPerTile = ((GraphicalView) plugin).getPixelsPerTile();
+						if (Math.abs(mouseDeltas[0]) > Math.abs(movementDeltas[0] * pxPerTile[0]))
+							mouseDeltas[0] = movementDeltas[0] * pxPerTile[0];
+						if (Math.abs(mouseDeltas[1]) > Math.abs(movementDeltas[1] * pxPerTile[1]))
+							mouseDeltas[1] = movementDeltas[1] * pxPerTile[1];
+
+						// finally set our result
+						model.getLevel().setSelectedOffset(mouseDeltas[0], mouseDeltas[1]);
+
 					}
 
 					private int[] getClosestViableDelta(String name, int endX, int endY) {
@@ -128,9 +191,10 @@ public class SchimmlerController implements Plugin {
 								dY -= Math.signum(dY);
 							}
 						}
-						return null;
+						return new int[] { 0, 0 };
 
 					}
+
 				};
 				((JComponent) plugin).addMouseListener(listener);
 				((JComponent) plugin).addMouseMotionListener(listener);

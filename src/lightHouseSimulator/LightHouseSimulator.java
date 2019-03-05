@@ -192,7 +192,9 @@ public class LightHouseSimulator extends JPanel {
 	}
 
 	private static BufferedImage resize(BufferedImage img, int width, int height) {
-		Image tmp = img.getScaledInstance(width, height, Image.SCALE_FAST);
+		// image.SCALE_FAST results in pixlated images, looks nice too but no
+		// interpolation at all
+		Image tmp = img.getScaledInstance(width, height, Image.SCALE_AREA_AVERAGING);
 		BufferedImage resized = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2d = resized.createGraphics();
 		g2d.drawImage(tmp, 0, 0, null);

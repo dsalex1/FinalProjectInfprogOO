@@ -21,6 +21,10 @@ public final class Level implements Cloneable {
 	 * The identifier of the currently selected tile, null if no tile is selected.
 	 */
 	protected String selected;
+	/**
+	 * The offset the currently selected tile has been moved by.
+	 */
+	protected int[] selectedOffset;
 
 	/** The type of this level. */
 	protected LevelType type;
@@ -108,6 +112,7 @@ public final class Level implements Cloneable {
 		if (id != null && !tiles.containsKey(id))
 			throw new IllegalArgumentException("The tile with the identifier '" + id + "' is not in this level.");
 		this.selected = id;
+		selectedOffset = new int[] { 0, 0 };
 	}
 
 	/**
@@ -189,28 +194,62 @@ public final class Level implements Cloneable {
 	public boolean canTileMoveTo(String name, int x, int y) {
 		return type.canTileMoveTo(this, name, x, y);
 	}
-	
+
 	@Override
 	public Level clone() {
 		Level clone = new Level(this.getType());
 		clone.setWidth(this.width);
 		clone.setHeight(this.height);
-		for(Entry<String, Tile> e:this.getTileMap().entrySet())
+		for (Entry<String, Tile> e : this.getTileMap().entrySet())
 			clone.addTile(e.getKey(), e.getValue().clone());
 		clone.setSelected(this.selected);
 		return clone;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
-		if(obj == null) return false;
-		if(obj.getClass() != this.getClass()) return false;
+		if (obj == null)
+			return false;
+		if (obj.getClass() != this.getClass())
+			return false;
 		Level level = (Level) obj;
-		if(level.getWidth() != this.getWidth() || level.getHeight() != this.getHeight()) return false;
-		if(!level.getSelected().equals(this.getSelected())) return false;
-		if(level.getType() != this.getType()) return false;
-		if(!level.getTileMap().equals(this.getTileMap())) return false;
+		if (level.getWidth() != this.getWidth() || level.getHeight() != this.getHeight())
+			return false;
+		if (!level.getSelected().equals(this.getSelected()))
+			return false;
+		if (level.getType() != this.getType())
+			return false;
+		if (!level.getTileMap().equals(this.getTileMap()))
+			return false;
 		return true;
+	}
+
+	/**
+	 * @param tiles the tiles to set
+	 */
+	public void setTiles(Map<String, Tile> tiles) {
+		this.tiles = tiles;
+	}
+
+	/**
+	 * @return the current offset of the selected tile
+	 */
+	public int[] getSelectedOffset() {
+		return selectedOffset;
+	}
+
+	/**
+	 * @param selectedOffset the offset of the selected tile to set
+	 */
+	public void setSelectedOffset(int x, int y) {
+		this.selectedOffset = new int[] { x, y };
+	}
+
+	/**
+	 * @param type the type to set
+	 */
+	public void setType(LevelType type) {
+		this.type = type;
 	}
 
 }
