@@ -41,6 +41,11 @@ public class SchimmlerView extends JPanel implements GraphicalView, InputPlugin 
 		super();
 	}
 
+	/**
+	 * The offset the currently selected tile has been moved by.
+	 */
+	protected int[] selectedOffset = new int[] { 0, 0 };
+
 	@Override
 	public void init(Model m) {
 		window = new JFrame();
@@ -111,8 +116,7 @@ public class SchimmlerView extends JPanel implements GraphicalView, InputPlugin 
 		String sel = m.getLevel().getSelected();
 		if (sel != null) {
 			Color color = colorMap.get(sel).darker().darker();
-			int[] offset = m.getLevel().getSelectedOffset();
-			drawTile(m, sel, color, frame, offset[0], offset[1]);
+			drawTile(m, sel, color, frame, selectedOffset[0], selectedOffset[1]);
 		}
 		return frame;
 
@@ -162,5 +166,12 @@ public class SchimmlerView extends JPanel implements GraphicalView, InputPlugin 
 	@Override
 	public int[] getPixelsPerTile() {
 		return new int[] { TILE_WIDTH, TILE_HEIGHT };
+	}
+
+	/**
+	 * @param selectedOffset the offset of the selected tile to set
+	 */
+	public void setSelectedOffset(int x, int y) {
+		this.selectedOffset = new int[] { x, y };
 	}
 }

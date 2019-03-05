@@ -60,7 +60,6 @@ public class SchimmlerController implements Plugin {
 
 						// if we wouldnt move at all try again the other direction
 						if (movementDeltas[0] == 0 && movementDeltas[1] == 0) {
-							log("try other");
 							mouseDeltas = new int[] { e.getX() - dragMouseStart[0], e.getY() - dragMouseStart[1] };
 							if (Math.abs(mouseDeltas[0]) > Math.abs(mouseDeltas[1]))
 								mouseDeltas[0] = 0;
@@ -134,7 +133,6 @@ public class SchimmlerController implements Plugin {
 
 						// if we wouldnt move at all try again the other direction
 						if (movementDeltas[0] == 0 && movementDeltas[1] == 0) {
-							log("try other");
 							mouseDeltas = new int[] { e.getX() - dragMouseStart[0], e.getY() - dragMouseStart[1] };
 							if (Math.abs(mouseDeltas[0]) > Math.abs(mouseDeltas[1]))
 								mouseDeltas[0] = 0;
@@ -155,7 +153,7 @@ public class SchimmlerController implements Plugin {
 							mouseDeltas[1] = movementDeltas[1] * pxPerTile[1];
 
 						// finally set our result
-						model.getLevel().setSelectedOffset(mouseDeltas[0], mouseDeltas[1]);
+						((GraphicalView) plugin).setSelectedOffset(mouseDeltas[0], mouseDeltas[1]);
 
 					}
 

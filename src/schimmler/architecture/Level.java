@@ -21,10 +21,6 @@ public final class Level implements Cloneable {
 	 * The identifier of the currently selected tile, null if no tile is selected.
 	 */
 	protected String selected;
-	/**
-	 * The offset the currently selected tile has been moved by.
-	 */
-	protected int[] selectedOffset;
 
 	/** The type of this level. */
 	protected LevelType type;
@@ -112,7 +108,6 @@ public final class Level implements Cloneable {
 		if (id != null && !tiles.containsKey(id))
 			throw new IllegalArgumentException("The tile with the identifier '" + id + "' is not in this level.");
 		this.selected = id;
-		selectedOffset = new int[] { 0, 0 };
 	}
 
 	/**
@@ -230,26 +225,4 @@ public final class Level implements Cloneable {
 	public void setTiles(Map<String, Tile> tiles) {
 		this.tiles = tiles;
 	}
-
-	/**
-	 * @return the current offset of the selected tile
-	 */
-	public int[] getSelectedOffset() {
-		return selectedOffset;
-	}
-
-	/**
-	 * @param selectedOffset the offset of the selected tile to set
-	 */
-	public void setSelectedOffset(int x, int y) {
-		this.selectedOffset = new int[] { x, y };
-	}
-
-	/**
-	 * @param type the type to set
-	 */
-	public void setType(LevelType type) {
-		this.type = type;
-	}
-
 }
