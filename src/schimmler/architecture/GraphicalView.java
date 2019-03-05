@@ -5,7 +5,6 @@ package schimmler.architecture;
  * end user.
  */
 public interface GraphicalView extends View {
-
 	/** returns the Coordinates of a given pixel in the level */
 	public int[] getLvlCoordAt(int x, int y);
 
@@ -23,4 +22,10 @@ public interface GraphicalView extends View {
 			GraphicalFilterPlugin.filter(model, img, i);
 	}
 	
+
+	/**
+	 * @param selectedOffset the offset of the selected tile to set
+	 */
+	public void setSelectedOffset(int x, int y);
+
 }
