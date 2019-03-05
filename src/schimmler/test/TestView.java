@@ -44,7 +44,7 @@ public class TestView implements View, InputPlugin {
 			System.out.print('|');
 			for (int x = 0; x < m.getLevel().getWidth(); x++) {
 				String atField = m.getLevel().fieldOccupied(x, y);
-				if(atField != null && atField.equals(m.getLevel().getSelected()))
+				if (atField != null && atField.equals(m.getLevel().getSelected()))
 					System.out.print('X');
 				else
 					System.out.print(map.get(atField));

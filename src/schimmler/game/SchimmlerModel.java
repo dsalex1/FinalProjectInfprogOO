@@ -1,8 +1,11 @@
 package schimmler.game;
 
+import java.io.File;
+
 import schimmler.architecture.Level;
 import schimmler.architecture.LevelType;
 import schimmler.architecture.Model;
+import schimmler.js.JavaScriptPluginLoader;
 
 public class SchimmlerModel extends Model {
 
@@ -66,7 +69,7 @@ public class SchimmlerModel extends Model {
 
 			@Override
 			public boolean won(Level level) {
-				return level.getTile("square").getX() == 0 && level.getTile("square").getY() == 2;
+				return false;// level.getTile("square").getX() == 2 && level.getTile("square").getY() == 2;
 			}
 
 		});
@@ -79,6 +82,7 @@ public class SchimmlerModel extends Model {
 		SchimmlerModel model = new SchimmlerModel();
 		model.registerPlugin(new SchimmlerView());
 		model.registerPlugin(new SchimmlerController());
+		model.loadPlugins(new JavaScriptPluginLoader(new File(System.getProperty("user.dir") + "/usedPlugins/")));
 		model.start();
 	}
 
