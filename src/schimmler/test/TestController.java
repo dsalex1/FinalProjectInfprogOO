@@ -20,7 +20,7 @@ public class TestController implements Plugin {
 			@Override
 			public void run() {
 				Scanner scr = new Scanner(System.in);
-				outer: while (scr.hasNext()) {
+				outer: while (scr.hasNext() && !Thread.interrupted()) {
 					String line = scr.nextLine();
 					if (line.matches("(?i)^select .+$")) {
 						if (model.getLevel() == null)
@@ -171,12 +171,11 @@ public class TestController implements Plugin {
 		return "ASCIIController";
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void onKill(Model m) {
 		try {
 			if (this.thread != null && this.thread.isAlive())
-				this.thread.stop();
+				this.thread.interrupt();
 		} catch (Exception e) {
 		}
 	}

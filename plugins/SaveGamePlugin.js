@@ -6,7 +6,7 @@
 			this.save(model);
 		},
 		onTileDeselected: function(model, tile, id) {
-			this.load(model);
+			//this.load(model);
 		},
 		onTileMoved: function(model, tile, id, oldx, oldy) {
 			//if(oldx != tile.getX() || oldy != tile.getY()) {
@@ -47,14 +47,15 @@
 			for each(e in Object.keys(saveGame["tiles"])) {
 				tileType = model.getTileType(saveGame["tiles"][e]["type"]);
 				tile = new Tile(saveGame["tiles"][e]["x"],saveGame["tiles"][e]["y"],tileType);
-				for each(d in Object.keys(saveGame["tiles"[e]["data"]])) {
+				for each(d in Object.keys(saveGame["tiles"][e]["data"])) {
 					tile.getData().put(d.getKey(), d.getValue())
 				}
 				level.addTile(e, tile);
 			}
-			level.setSelected(saveGame["selected"]);
+			level.setSelected(null);
 			model.setLevel(level);
-			InputPlugin.tileMoved(model, level.getTile(level.getSelected()), level.getSelected(), level.getTile(level.getSelected()).getX(), level.getTile(level.getSelected()).getY());
+			//InputPlugin.tileMoved(model, level.getTile(level.getSelected()), level.getSelected(), level.getTile(level.getSelected()).getX(), level.getTile(level.getSelected()).getY());
+			View.update(model);
 		},
 		getName: function() { return "SaveGamePlugin" },
 	}))();

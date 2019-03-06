@@ -31,7 +31,7 @@ public class SchimmlerController implements Plugin {
 					@Override
 					public void mouseReleased(MouseEvent e) {
 
-						int[] dragEnd = ((GraphicalView) plugin).getLvlCoordAt(e.getX(), e.getY());
+						//int[] dragEnd = ((GraphicalView) plugin).getLvlCoordAt(e.getX(), e.getY()); // not used anywhere, commented out to remove warning and to annotate it not being used anywhere
 
 						String name = model.getLevel().getSelected();
 

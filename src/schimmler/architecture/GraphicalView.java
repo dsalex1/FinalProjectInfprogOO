@@ -16,10 +16,12 @@ public interface GraphicalView extends View {
 	 * Run all GraphicalFilterPlugins on a given image.
 	 * @param model the model to operate on
 	 * @param img the image to apply the filters on
+	 * @param width the width of the image
+	 * @param height the height of the image
 	 */
-	public static void filter(Model model, int[][] img) {
+	public static void filter(Model model, int[] img, int width, int height) {
 		for(int i=0;i<5;i++)
-			GraphicalFilterPlugin.filter(model, img, i);
+			GraphicalFilterPlugin.filter(model, img, width, height,  i);
 	}
 	
 

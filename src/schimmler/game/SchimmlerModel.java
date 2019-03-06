@@ -3,7 +3,10 @@ package schimmler.game;
 import schimmler.architecture.Level;
 import schimmler.architecture.LevelType;
 import schimmler.architecture.Model;
+import schimmler.architecture.Plugin;
 import schimmler.architecture.Tile;
+import schimmler.architecture.View;
+import schimmler.test.TestFilter;
 
 public class SchimmlerModel extends Model {
 
@@ -13,54 +16,145 @@ public class SchimmlerModel extends Model {
 
 	@Override
 	public void init() {
-
+		registerMenu();
+		registerSchimmler();
+		setLevel(createLevel("menu"));
+	}
+	
+	private void registerMenu() {
 		
+		registerTileType("menuGreen", new MatrixTileType() {
+			private int[][] geometry = { { 1, 1 , 1} };
+			@Override
+			public void init(Tile tile) {
+				tile.getData().put("color", "#00FF00");
+			}
+			@Override
+			public int[][] getGeometryMatrix() {
+				return geometry;
+			}
+			
+		});
+		
+		registerTileType("menuBlue", new MatrixTileType() {
+			private int[][] geometry = { { 1, 1 , 1} };
+			@Override
+			public void init(Tile tile) {
+				tile.getData().put("color", "#0000FF");
+			}
+			@Override
+			public int[][] getGeometryMatrix() {
+				return geometry;
+			}
+		});
+		
+		registerTileType("menuRed", new MatrixTileType() {
+			private int[][] geometry = { { 1, 1 , 1} };
+			@Override
+			public void init(Tile tile) {
+				tile.getData().put("color", "#FF0000");
+			}
+			@Override
+			public int[][] getGeometryMatrix() {
+				return geometry;
+			}
+		});
+		
+		
+		registerLevelType("menu", new LevelType() {
+			@Override
+			public void init(Model m, Level level) {
+				level.setWidth(4);
+				level.setHeight(7);
+				level.addTile("startGame", createTile("menuGreen", 0, 1));
+				level.addTile("openMenu", createTile("menuBlue", 0, 3));
+				level.addTile("exit", createTile("menuRed", 0, 5));
+			}
+			
+			@Override
+			public boolean canTileMoveTo(Level level, String name, int x, int y) {
+				if(y != level.getTile(name).getY()) return false;
+				return super.canTileMoveTo(level, name, x, y);
+			}
+			
+			@Override
+			public void update(Model model, Level level) {
+				
+				if(level.getTile("startGame").getX() != 0) {
+					model.setLevel(model.createLevel("schimmler"));
+					View.update(model);
+					return;
+				}
+				
+				if(level.getTile("openMenu").getX() != 0) {
+				//	model.setLevel(model.createLevel("levelSelect"));
+				//	View.update(model);
+				//	return;
+				}
+			
+				if(level.getTile("exit").getX() != 0) {
+					Plugin.kill(model);
+					System.exit(0);
+				}	
+				
+				
+			}
+
+			@Override
+			public boolean won(Level level) {
+				return false;
+			}
+
+		});
+	}
+	
+	private void registerSchimmler() {
 		registerTileType("square", new MatrixTileType() {
+			private int[][] geometry = { { 1, 1 }, { 1, 1 } };
 			@Override
 			public void init(Tile tile) {
 				tile.getData().put("color", "#007FFF");
 			}
 			@Override
 			public int[][] getGeometryMatrix() {
-				int[][] geometry = { { 1, 1 }, { 1, 1 } };
 				return geometry;
 			}
 		});
 		registerTileType("hookUL", new MatrixTileType() {
+			private 				int[][] geometry = { { 1, 1 }, { 1, 0 } };
 			@Override
 			public int[][] getGeometryMatrix() {
-				int[][] geometry = { { 1, 1 }, { 1, 0 } };
 				return geometry;
 			}
 		});
 
 		registerTileType("hookUR", new MatrixTileType() {
+			private int[][] geometry = { { 1, 1 }, { 0, 1 } };
 			@Override
 			public int[][] getGeometryMatrix() {
-				int[][] geometry = { { 1, 1 }, { 0, 1 } };
 				return geometry;
 			}
 		});
 
 		registerTileType("hookBL", new MatrixTileType() {
+			private int[][] geometry = { { 1, 0 }, { 1, 1 } };
 			@Override
 			public int[][] getGeometryMatrix() {
-				int[][] geometry = { { 1, 0 }, { 1, 1 } };
 				return geometry;
 			}
 		});
 
 		registerTileType("hookBR", new MatrixTileType() {
+			private int[][] geometry = { { 0, 1 }, { 1, 1 } };
 			@Override
 			public int[][] getGeometryMatrix() {
-				int[][] geometry = { { 0, 1 }, { 1, 1 } };
 				return geometry;
 			}
 		});
 
 		registerLevelType("schimmler", new LevelType() {
 			@Override
-			public void init(Level level) {
+			public void init(Model m, Level level) {
 				level.setWidth(4);
 				level.setHeight(6);
 				level.addTile("square", createTile("square", 1, 1));
@@ -76,15 +170,13 @@ public class SchimmlerModel extends Model {
 			}
 
 		});
-
-		setLevel(createLevel("schimmler"));
-
 	}
 
 	public static void main(String[] args) {
 		SchimmlerModel model = new SchimmlerModel();
 		model.registerPlugin(new SchimmlerView());
 		model.registerPlugin(new SchimmlerController());
+		model.registerPlugin(new TestFilter());
 		model.start();
 	}
 

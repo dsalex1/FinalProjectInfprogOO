@@ -2,16 +2,15 @@ package schimmler.game;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import lightHouseSimulator.LightHouseSimulator;
 import schimmler.architecture.InputPlugin;
 import schimmler.architecture.Model;
-import schimmler.architecture.Tile;
 import schimmler.architecture.GraphicalView;
 import schimmler.architecture.View;
 
@@ -118,6 +117,12 @@ public class SchimmlerView extends JPanel implements GraphicalView, InputPlugin 
 			Color color = colorMap.get(sel).darker().darker();
 			drawTile(m, sel, color, frame, selectedOffset[0], selectedOffset[1]);
 		}
+		
+		
+		// <GraphicalFilterCode>
+		GraphicalView.filter(m, ((DataBufferInt)frame.getRaster().getDataBuffer()).getData(), frame.getWidth(), frame.getHeight());
+		// </GraphicalFilterCode>
+		
 		return frame;
 
 	}
@@ -126,21 +131,21 @@ public class SchimmlerView extends JPanel implements GraphicalView, InputPlugin 
 		drawTile(m, tile, color, img, 0, 0);
 	}
 
-	// TODO:this is not very efficient, nor pretty
 	private void drawTile(Model m, String tile, Color color, BufferedImage img, int offsetX, int offsetY) {
+		Graphics2D g2d = img.createGraphics();
 		for (int column = 0; column < m.getLevel().getWidth(); column++)
 			for (int row = 0; row < m.getLevel().getHeight(); row++)
-				if (m.getLevel().fieldOccupied(column, row) == tile)
-					for (int x = 0; x < TILE_WIDTH; x++)
-						for (int y = 0; y < TILE_HEIGHT; y++)
-							img.setRGB(column * TILE_WIDTH + OFFSET_X + x + offsetX,
-									row * TILE_HEIGHT + OFFSET_Y + y + offsetY, color.getRGB());
+				if (m.getLevel().fieldOccupied(column, row) == tile) {
+					g2d.setColor(color);
+					g2d.fillRect(column * TILE_WIDTH + OFFSET_X + offsetX,
+							row * TILE_HEIGHT + OFFSET_Y + offsetY, TILE_WIDTH, TILE_HEIGHT);
+				}
 	}
 
 	private void fillGround(Model m, Color color, BufferedImage img) {
-		for (int x = 0; x < TILE_WIDTH * m.getLevel().getWidth(); x++)
-			for (int y = 0; y < TILE_HEIGHT * m.getLevel().getHeight(); y++)
-				img.setRGB(OFFSET_X + x, OFFSET_Y + y, color.getRGB());
+		Graphics2D g2d = img.createGraphics();
+		g2d.setColor(color);
+		g2d.fillRect(OFFSET_X, OFFSET_Y, TILE_WIDTH * m.getLevel().getWidth(), TILE_HEIGHT * m.getLevel().getHeight());
 	}
 
 	@Override

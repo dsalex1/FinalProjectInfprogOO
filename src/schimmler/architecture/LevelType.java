@@ -11,9 +11,10 @@ public abstract class LevelType {
 	/**
 	 * A method for initializing a level by placing the tiles and setting the width
 	 * and height.
+	 * @param model The model this level was initialized in.
 	 * @param level The level to initialize
 	 */
-	public abstract void init(Level level);
+	public abstract void init(Model model, Level level);
 
 	/**
 	 * Returns true if a level has been finished successfully.
@@ -21,7 +22,16 @@ public abstract class LevelType {
 	 * @return return if the level was completed correctly.
 	 */
 	public abstract boolean won(Level level);
-
+	
+	/**
+	 * A method used for optional update events of a level.
+	 * @param model the model this is happening in.
+	 * @param level the level that was updated.
+	 */
+	public void update(Model model, Level level) {
+		
+	}
+	
 	/**
 	 * Return the identifier of the field that occupies the given x and y position
 	 * and exclude a given identifier for a given level (null if the field is free).

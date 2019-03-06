@@ -225,4 +225,31 @@ public final class Level implements Cloneable {
 	public void setTiles(Map<String, Tile> tiles) {
 		this.tiles = tiles;
 	}
+
+	/**
+	 * @param type the type to set
+	 */
+	public void setType(LevelType type) {
+		this.type = type;
+	}
+	
+	/**
+	 * Sets a Tile internal to a new position. only to be used to calculate things
+	 * on levels, does not work in models.
+	 * 
+	 * @param id the identifier of the tile to be moved
+	 * @param x  the new x position of the tile
+	 * @param y  the new y position of the tile
+	 * @throws IllegalArgumentException if an identifier not in this level is
+	 *                                  supplied
+	 */
+	public void setTilePositionInternal(String id, int x, int y) {
+		if (id != null && !this.tiles.containsKey(id))
+			throw new IllegalArgumentException("The tile with the identifier '" + id + "' is not in this level.");
+		Tile tile = this.getTile(id);
+		tile.setX(x);
+		tile.setY(y);
+	}
+
+
 }

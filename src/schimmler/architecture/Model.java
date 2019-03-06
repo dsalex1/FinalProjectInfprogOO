@@ -54,11 +54,12 @@ public abstract class Model {
 		gameLoop = new Thread(new Runnable() {
 			public void run() {
 				try {
-					while (true) {
+					while (!Thread.interrupted()) {
 						View.update(Model.this);
 						Thread.sleep(1000 / 30);
 					}
-				} catch (InterruptedException e) {}
+				} catch (InterruptedException e) {
+				}
 			}
 		});
 		gameLoop.start();
@@ -67,11 +68,11 @@ public abstract class Model {
 	/**
 	 * A method meant to be executed when the kill event has been triggered.
 	 */
-	@SuppressWarnings("deprecation")
 	protected void stop() {
 		try {
-			if (gameLoop != null && gameLoop.isAlive())
-				gameLoop.stop();
+			if (gameLoop != null && gameLoop.isAlive())  {
+				gameLoop.interrupt();
+			}
 		} catch (Exception e) {
 		}
 		plugins = new ArrayList<Plugin>(); // stop plugins from receiving events
@@ -105,18 +106,20 @@ public abstract class Model {
 	 *                                  supplied
 	 */
 	public void setTilePosition(String id, int x, int y) {
-		if (id != null && !getLevel().tiles.containsKey(id))
+		if (id != null && !getLevel().getTileMap().containsKey(id))
 			throw new IllegalArgumentException("The tile with the identifier '" + id + "' is not in this level.");
 		Tile tile = getLevel().getTile(id);
 		tile.setX(x);
 		tile.setY(y);
 
-		// check winning conditionf
-		if (getLevel().type.won(getLevel())) {
+		// update level
+		getLevel().getType().update(this, getLevel());
+		// check winning condition
+		if (getLevel().getType().won(getLevel())) {
 			// clean up
 			getLevel().setSelected(null);
 			// and one last update
-			View.update(Model.this);
+			View.update(this);
 			Plugin.won(this);
 			Plugin.kill(this);
 		}
@@ -249,7 +252,7 @@ public abstract class Model {
 		if (type == null)
 			throw new IllegalArgumentException("No LevelType with the identifier '" + identifier + "' was found.");
 		Level level = new Level(type);
-		type.init(level);
+		type.init(this, level);
 		return level;
 	}
 

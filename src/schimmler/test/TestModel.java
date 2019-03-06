@@ -25,25 +25,40 @@ public class TestModel extends Model {
 				return cx == 0 && cy == 0;
 			}
 		});
+		
 		registerTileType("hook", new TileType() {
 			@Override
 			public boolean fieldOccupiedRelative(Tile tile, int cx, int cy) {
 				return (cx == 0 && cy == 0) || (cx == 1 && cy == 0) || (cx == 0 && cy == 1);
 			}
 		});
+		
+		
 
 		registerLevelType("test", new LevelType() {
 			@Override
-			public void init(Level level) {
-				level.setWidth(3);
-				level.setHeight(3);
-				level.addTile("square", createTile("square", 2, 1));
-				level.addTile("hook", createTile("hook", 0, 0));
+			public void init(Model m, Level level) {
+				level.setWidth(4);
+				level.setHeight(4);
+				level.addTile("square", createTile("square", 0, 0));
+				level.addTile("square2", createTile("square", 1, 1));
+				level.addTile("square3", createTile("square", 1, 0));
+				
+				level.addTile("square4", createTile("square", 3, 0));
+				level.addTile("square5", createTile("square", 3, 1));
+				level.addTile("square6", createTile("square", 2, 1));
+				
+				level.addTile("square7", createTile("square", 3, 2));
+				level.addTile("square8", createTile("square", 3, 3));
+				level.addTile("square9", createTile("square", 2, 3));
+				
+				level.addTile("hook", createTile("hook", 0, 2));
 			}
 
 			@Override
 			public boolean won(Level level) {
-				return level.getTile("square").getX() != 1 || level.getTile("square").getY() != 1;
+				return false;
+				//return level.getTile("square").getX() != 1 || level.getTile("square").getY() != 1;
 			}
 
 		});

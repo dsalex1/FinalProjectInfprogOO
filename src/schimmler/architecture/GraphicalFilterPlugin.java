@@ -9,8 +9,10 @@ public interface GraphicalFilterPlugin extends Plugin {
 	 * 
 	 * @param m the model this event is called from
 	 * @param img the array of RGB values to filter
+	 * @param width the width of the image
+	 * @param height the height of the image
 	 */
-	public void onFilter(Model m, int[][] img);
+	public void onFilter(Model m, int[] img, int width, int height);
 	
 	
 	/**
@@ -18,11 +20,13 @@ public interface GraphicalFilterPlugin extends Plugin {
 	 * 
 	 * @param m the model this event is called from
 	 * @param img the array of RGB values to filter
+	 * @param width the width of the image
+	 * @param height the height of the image
 	 * @param priority the priority of filters meant to be reached by this
 	 */
-	default public void onFilter(Model m, int[][] img, int priority) {
+	default public void onFilter(Model m, int[] img, int width, int height, int priority) {
 		if(shouldFilter(priority))
-			onFilter(m, img);
+			onFilter(m, img, width, height);
 	}
 	
 	
@@ -36,28 +40,32 @@ public interface GraphicalFilterPlugin extends Plugin {
 	
 
 	/**
-	 * Call the {@link #onFilter(Model,int[][])} event for all plugins that
+	 * Call the {@link #onFilter(Model,int[],int,int)} event for all plugins that
 	 * subscribed to it.
 	 * 
 	 * @param m the model this event is called from.
 	 * @param img the array of RGB values to filter
+	 * @param width the width of the image
+	 * @param height the height of the image
 	 */
-	public static void filter(Model m, int[][] img) {
-		m.call("onFilter", GraphicalFilterPlugin.class, new Class[] { Model.class, int[][].class },
-				new Object[] { m, img });
+	public static void filter(Model m, int[] img, int width, int height) {
+		m.call("onFilter", GraphicalFilterPlugin.class, new Class[] { Model.class, int[].class, int.class, int.class },
+				new Object[] { m, img, width, height });
 	}
 	
 	/**
-	 * Call the {@link #onFilter(Model,int[][],int)} event for all plugins that
+	 * Call the {@link #onFilter(Model,int[],int,int,int)} event for all plugins that
 	 * subscribed to it.
 	 * 
 	 * @param m the model this event is called from.
 	 * @param img the array of RGB values to filter
+	 * @param width the width of the image
+	 * @param height the height of the image
 	 * @param priority the priority of this filter operation
 	 */
-	public static void filter(Model m, int[][] img, int priority) {
-		m.call("onFilter", GraphicalFilterPlugin.class, new Class[] { Model.class, int[][].class, int.class },
-				new Object[] { m, img, priority });
+	public static void filter(Model m, int[] img, int width, int height, int priority) {
+		m.call("onFilter", GraphicalFilterPlugin.class, new Class[] { Model.class, int[].class, int.class, int.class, int.class },
+				new Object[] { m, img, width, height, priority });
 	}
 	
 	
