@@ -1,4 +1,4 @@
-package schimmler.game;
+package schimmler.architecture;
 
 import schimmler.architecture.Tile;
 import schimmler.architecture.TileType;
@@ -22,8 +22,8 @@ public abstract class MatrixTileType extends TileType {
      * this coordinate is occupied
      * 
      * @param tile the tile to check
-     * @param cx the relative x position to check.
-     * @param cy the relative y position to check.
+     * @param cx   the relative x position to check.
+     * @param cy   the relative y position to check.
      * @return whether this tile is at the given position.
      */
     private boolean isInMatrix(Tile tile, int cx, int cy) {

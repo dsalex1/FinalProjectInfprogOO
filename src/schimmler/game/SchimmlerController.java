@@ -19,7 +19,7 @@ public class SchimmlerController implements Plugin {
 
 	@Override
 	public void onPluginsLoaded(Model model) {
-		// search for plugins which can have mouse listeners, here explicitly the
+		// search for plugins which can have mouse listeners and are pixel based views
 		List<Plugin> plugins = model.getPlugins();
 		for (Plugin plugin : plugins) {
 			if (plugin instanceof GraphicalView && plugin instanceof JComponent) {
