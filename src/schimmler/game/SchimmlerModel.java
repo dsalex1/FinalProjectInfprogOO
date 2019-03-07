@@ -139,7 +139,7 @@ public class SchimmlerModel extends Model {
 			public void init() {
 				wonLevel = new Level(this);
 				wonLevel.setWidth(4);
-				wonLevel.setHeight(6);
+				wonLevel.setHeight(13);
 				
 				// Schimmler Icon
 				wonLevel.addTile("pixel_00", createTile("pixelPURPLE", 0, 0));
@@ -163,23 +163,23 @@ public class SchimmlerModel extends Model {
 				wonLevel.addTile("pixel_33", createTile("pixelGREEN", 3, 3));
 				
 				// Menu
-				wonLevel.addTile("pixel_07", createTile("pixelBLUE", 0, 7));
-				wonLevel.addTile("pixel_37", createTile("pixelBLUE", 3, 7));
+				wonLevel.addTile("pixel_07", createTile("pixelBLUE", 0, 6));
+				wonLevel.addTile("pixel_37", createTile("pixelBLUE", 3, 6));
 				
-				wonLevel.addTile("pixel_08", createTile("pixelBLUE", 0, 8));
-				wonLevel.addTile("pixel_38", createTile("pixelBLUE", 3, 8));
+				wonLevel.addTile("pixel_08", createTile("pixelBLUE", 0, 7));
+				wonLevel.addTile("pixel_38", createTile("pixelBLUE", 3, 7));
 				
 				// Exit
-				wonLevel.addTile("pixel_010", createTile("pixelRED", 0, 10));
-				wonLevel.addTile("pixel_310", createTile("pixelRED", 3, 10));
+				wonLevel.addTile("pixel_010", createTile("pixelRED", 0, 9));
+				wonLevel.addTile("pixel_310", createTile("pixelRED", 3, 9));
 				
-				wonLevel.addTile("pixel_111", createTile("pixelRED", 1, 11));
-				wonLevel.addTile("pixel_211", createTile("pixelRED", 2, 11));
-				wonLevel.addTile("pixel_112", createTile("pixelRED", 1, 12));
-				wonLevel.addTile("pixel_212", createTile("pixelRED", 2, 12));
+				wonLevel.addTile("pixel_111", createTile("pixelRED", 1, 10));
+				wonLevel.addTile("pixel_211", createTile("pixelRED", 2, 10));
+				wonLevel.addTile("pixel_112", createTile("pixelRED", 1, 11));
+				wonLevel.addTile("pixel_212", createTile("pixelRED", 2, 11));
 				
-				wonLevel.addTile("pixel_013", createTile("pixelRED", 0, 13));
-				wonLevel.addTile("pixel_313", createTile("pixelRED", 3, 13));
+				wonLevel.addTile("pixel_013", createTile("pixelRED", 0, 12));
+				wonLevel.addTile("pixel_313", createTile("pixelRED", 3, 12));
 			}
 			
 			@Override
@@ -287,11 +287,11 @@ public class SchimmlerModel extends Model {
 				wonLevel = new Level(this);
 				wonLevel.setWidth(4);
 				wonLevel.setHeight(6);
-				wonLevel.addTile("square", createTile("square", 1, 2));
-				/*wonLevel.addTile("hookUL", createTile("hookUL", 0, 0));
+				wonLevel.addTile("square", createTile("square", 1, 4));
+				wonLevel.addTile("hookUL", createTile("hookUL", 0, 0));
 				wonLevel.addTile("hookUR", createTile("hookUR", 2, 0));
 				wonLevel.addTile("hookBL", createTile("hookBL", 0, 2));
-				wonLevel.addTile("hookBR", createTile("hookBR", 2, 2));*/
+				wonLevel.addTile("hookBR", createTile("hookBR", 2, 2));
 			}
 			
 			@Override
@@ -333,7 +333,10 @@ public class SchimmlerModel extends Model {
 		model.registerPlugin(new TestController());
 		model.registerPlugin(new TestFilter());
 		model.registerPlugin(new LightHousePlugin());
-		// model.registerPlugin(new LightHouseOnlinePlugin());
+		model.registerPlugin(new LightHouseOnlinePlugin());
+		model.loadPlugins(new JavaScriptPluginLoader(new File(System.getProperty("user.dir") + "/plugins/")));
+		model.loadPlugins(new JarFilePluginLoader(new File(System.getProperty("user.dir") + "/plugins/")));
+		
 		model.start();
 	}
 

@@ -172,8 +172,8 @@ public class TestFilter implements GraphicalFilterPlugin, InputPlugin {
 	}
 
 	@Override
-	public void onlevelSet(Model m) {
-		log("level set");
+	public void onLevelSet(Model m) {
+	//	log("level set");
 	}
 
 	String lastSelected;

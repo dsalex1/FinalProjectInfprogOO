@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import schimmler.architecture.plugin.InputPlugin;
 import schimmler.architecture.plugin.Plugin;
 import schimmler.architecture.plugin.View;
 
@@ -98,7 +99,7 @@ public abstract class Model {
 	 */
 	public void setLevel(Level level) {
 		this.level = level;
-		Plugin.levelSet(this);
+		InputPlugin.levelSet(this);
 	}
 
 	/**
@@ -126,7 +127,7 @@ public abstract class Model {
 			// and one last update
 			View.update(this);
 			Plugin.won(this);
-			Plugin.kill(this);
+			//Plugin.kill(this);
 		}
 	}
 

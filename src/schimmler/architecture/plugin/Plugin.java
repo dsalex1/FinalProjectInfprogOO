@@ -77,24 +77,6 @@ public interface Plugin {
 	}
 
 	/**
-	 * Event fired when a new level is set
-	 * 
-	 * @param m the model this event is called from
-	 */
-	default public void onlevelSet(Model m) {
-	}
-
-	/**
-	 * Call the {@link #onlevelSet(Model)} event for all plugins that subscribed to
-	 * it.
-	 * 
-	 * @param m the model this event is called from.
-	 */
-	public static void levelSet(Model m) {
-		m.call("onlevelSet", InputPlugin.class, new Class[] { Model.class }, new Object[] { m });
-	}
-
-	/**
 	 * Event fired when the current level is won
 	 * 
 	 * @param m the model this event is called from

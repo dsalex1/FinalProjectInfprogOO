@@ -8,6 +8,7 @@ import java.awt.image.DataBufferInt;
 
 import javax.swing.JFrame;
 
+import schimmler.architecture.Level;
 import schimmler.architecture.Model;
 import schimmler.architecture.plugin.GraphicalView;
 import schimmler.architecture.plugin.InputPlugin;
@@ -99,38 +100,32 @@ public class SchimmlerView extends JFrame implements GraphicalView, InputPlugin 
 			Color color = colorMap.get(tile);
 			if (m.getLevel().getSelected() != null && m.getLevel().getSelected().equals(tile))
 				continue;
-			drawTile(m, tile, color, frame);
+			drawTile(m.getLevel(), tile, color, frame);
 		}
-
-		colorMap = new HashMap<String, Color>();
-		i = '0';
-		for (String name : m.getLevel().getType().getWonLevel().getTileMap().keySet()) {
-			Map<String, String> tileData = m.getLevel().getType().getWonLevel().getTile(name).getData();
-			if (tileData.containsKey("color")) {
-				colorMap.put(name, Color.decode(tileData.get("color")));
-			} else {
-				colorMap.put(name, new Color(Color.HSBtoRGB(0.2f * i++, 1, 1f)));
-			}
-		}
-
-		if (m.getLevel().getType().getWonLevel() != null)
-			for (String tile : m.getLevel().getType().getWonLevel().getTileMap().keySet()) {
-				if (m.getLevel().getType().getWonLevel().getSelected() != null
-						&& m.getLevel().getType().getWonLevel().getSelected().equals(tile))
-					continue;
-				if (m.getLevel().getType().getWonLevel().getTile(tile).getData().get("color") != null)
-					drawTileSmall(m, tile, colorMap.get(tile), frame);
-				else
-					drawTileSmall(m, tile,
-							Color.decode(m.getLevel().getType().getWonLevel().getTile(tile).getData().get("color")),
-							frame);
-			}
-
+		
 		// draw selected tile
 		String sel = m.getLevel().getSelected();
 		if (sel != null) {
 			Color color = colorMap.get(sel).darker().darker();
-			drawTile(m, sel, color, frame, selectedOffset[0], selectedOffset[1]);
+			drawTile(m.getLevel(), sel, color, frame, selectedOffset[0], selectedOffset[1]);
+		}
+
+		colorMap = new HashMap<String, Color>();
+		Level wonLevel = m.getLevel().getType().getWonLevel();
+		if (wonLevel != null) {
+			i = '0';
+			for (String name : wonLevel.getTileMap().keySet()) {
+				Map<String, String> tileData = wonLevel.getTile(name).getData();
+				if (tileData.containsKey("color")) {
+					colorMap.put(name, Color.decode(tileData.get("color")));
+				} else {
+					colorMap.put(name, new Color(Color.HSBtoRGB(0.2f * i++, 1, 1f)));
+				}
+			}
+
+			for (String tile : wonLevel.getTileMap().keySet()) {
+					drawTileSmall(wonLevel, tile, colorMap.get(tile), frame);
+			}
 		}
 
 		// <GraphicalFilterCode>
@@ -142,15 +137,15 @@ public class SchimmlerView extends JFrame implements GraphicalView, InputPlugin 
 
 	}
 
-	private void drawTile(Model m, String tile, Color color, BufferedImage img) {
-		drawTile(m, tile, color, img, 0, 0);
+	private void drawTile(Level level, String tile, Color color, BufferedImage img) {
+		drawTile(level, tile, color, img, 0, 0);
 	}
 
-	private void drawTile(Model m, String tile, Color color, BufferedImage img, int offsetX, int offsetY) {
+	private void drawTile(Level level, String tile, Color color, BufferedImage img, int offsetX, int offsetY) {
 		Graphics2D g2d = img.createGraphics();
-		for (int column = 0; column < m.getLevel().getWidth(); column++)
-			for (int row = 0; row < m.getLevel().getHeight(); row++) {
-				String occp = m.getLevel().fieldOccupied(column, row);
+		for (int column = 0; column < level.getWidth(); column++)
+			for (int row = 0; row < level.getHeight(); row++) {
+				String occp = level.fieldOccupied(column, row);
 				if (occp != null && occp.equals(tile)) {
 					g2d.setColor(color);
 					g2d.fillRect(column * TILE_WIDTH + OFFSET_X + offsetX, row * TILE_HEIGHT + OFFSET_Y + offsetY,
@@ -159,16 +154,16 @@ public class SchimmlerView extends JFrame implements GraphicalView, InputPlugin 
 			}
 	}
 
-	private void drawTileSmall(Model m, String tile, Color color, BufferedImage img) {
+	private void drawTileSmall(Level level, String tile, Color color, BufferedImage img) {
 		Graphics2D g2d = img.createGraphics();
-		for (int column = 0; column < m.getLevel().getWidth(); column++)
-			for (int row = 0; row < m.getLevel().getHeight(); row++) {
-				String occp = m.getLevel().fieldOccupied(column, row);
+		for (int column = 0; column < level.getWidth(); column++)
+			for (int row = 0; row < level.getHeight(); row++) {
+				String occp = level.fieldOccupied(column, row);
 				if (occp != null && occp.equals(tile)) {
 					g2d.setColor(color);
 					g2d.fillRect(
 							(int) ((column + 0.5) * SUBPIXEL_COUNT * 2 + 2 * OFFSET_X
-									+ m.getLevel().getWidth() * TILE_WIDTH),
+									+ level.getWidth() * TILE_WIDTH),
 							(row + 1) * SUBPIXEL_COUNT * 2, SUBPIXEL_COUNT * 2, SUBPIXEL_COUNT * 2);
 				}
 			}
