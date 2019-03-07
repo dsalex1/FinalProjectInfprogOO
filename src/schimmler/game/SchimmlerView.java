@@ -123,12 +123,14 @@ public class SchimmlerView extends JFrame implements GraphicalView, InputPlugin 
 	private void drawTile(Model m, String tile, Color color, BufferedImage img, int offsetX, int offsetY) {
 		Graphics2D g2d = img.createGraphics();
 		for (int column = 0; column < m.getLevel().getWidth(); column++)
-			for (int row = 0; row < m.getLevel().getHeight(); row++)
-				if (m.getLevel().fieldOccupied(column, row) == tile) {
+			for (int row = 0; row < m.getLevel().getHeight(); row++) {
+				String occp = m.getLevel().fieldOccupied(column, row);
+				if (occp != null && occp.equals(tile)) {
 					g2d.setColor(color);
 					g2d.fillRect(column * TILE_WIDTH + OFFSET_X + offsetX, row * TILE_HEIGHT + OFFSET_Y + offsetY,
 							TILE_WIDTH, TILE_HEIGHT);
 				}
+			}
 	}
 
 	private void fillGround(Model m, Color color, BufferedImage img) {

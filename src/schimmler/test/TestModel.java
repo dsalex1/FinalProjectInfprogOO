@@ -66,6 +66,7 @@ public class TestModel extends Model {
 
 	public static void main(String[] args) {
 		TestModel model = new TestModel();
+		model.registerPlugin(new TestController());
 		model.registerPlugin(new SchimmlerView());
 		model.registerPlugin(new SchimmlerController());
 		model.registerPlugin(new LightHouseOnlinePlugin());
@@ -73,6 +74,7 @@ public class TestModel extends Model {
 		model.loadPlugins(new JarFilePluginLoader(new File(System.getProperty("user.dir") + "/plugins/")));
 		System.out.println(model.getPlugins());
 		model.start();
+
 	}
 
 }
