@@ -35,6 +35,11 @@ public interface GraphicalView extends View {
 	public void setSelectedOffset(int x, int y);
 
 	/**
+	 * returns the width of the playground
+	 */
+	public int getPlaygroundWidth(Model m);
+
+	/**
 	 * returns the offset of the selected tile
 	 */
 	public int[] getSelectedOffset();

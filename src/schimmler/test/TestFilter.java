@@ -1,10 +1,14 @@
 package schimmler.test;
 
 import schimmler.architecture.Model;
+import schimmler.architecture.Tile;
 import schimmler.architecture.plugin.GraphicalFilterPlugin;
 import schimmler.architecture.plugin.GraphicalView;
+import schimmler.architecture.plugin.InputPlugin;
 
-public class TestFilter implements GraphicalFilterPlugin {
+public class TestFilter implements GraphicalFilterPlugin, InputPlugin {
+
+	boolean FANCY_FANCY = true;
 
 	int SPEED_FACTOR = 2;
 	int ITERATIONS = 8;
@@ -47,17 +51,22 @@ public class TestFilter implements GraphicalFilterPlugin {
 
 	private float[][] velocities;
 	private float[][] values;
-	private int[][] blocked;
+	private float[][] blocked;
 	private float[][] offset;
 
 	private int width;
 	private int height;
 
-	private void initFields() {
+	private void initFields(Model m, GraphicalView view) {
 		velocities = new float[width / SPEED_FACTOR][height / SPEED_FACTOR];
 		values = new float[width / SPEED_FACTOR][height / SPEED_FACTOR];
-		blocked = new int[width / SPEED_FACTOR][height / SPEED_FACTOR];
+		blocked = new float[width / SPEED_FACTOR][height / SPEED_FACTOR];
 		offset = new float[width / SPEED_FACTOR][height / SPEED_FACTOR];
+		int playX = view.getPlaygroundWidth(m);
+		for (int x = playX / SPEED_FACTOR; x < playX / SPEED_FACTOR + 30; x++)
+			for (int y = 0; y < height / SPEED_FACTOR; y++)
+				blocked[x][y] = 0.95f - 0.4f * (x - playX / SPEED_FACTOR) / 30;
+
 	}
 
 	private void updatePixels(int[] img) {
@@ -89,8 +98,8 @@ public class TestFilter implements GraphicalFilterPlugin {
 						for (int j = 0; j < SPEED_FACTOR; j++) {
 							int sX = x * SPEED_FACTOR + i;
 							int sY = y * SPEED_FACTOR + j;
-							int tX = sX + (int) (dX * REFRACTION);
-							int tY = sY + (int) (dY * REFRACTION);
+							int tX = sX + (int) (dX * (FANCY_FANCY ? REFRACTION : 100));
+							int tY = sY + (int) (dY * (FANCY_FANCY ? REFRACTION : 100));
 							if (tX > width - 1)
 								tX = width - 1;
 							if (tY > height - 1)
@@ -99,8 +108,8 @@ public class TestFilter implements GraphicalFilterPlugin {
 								tX = 0;
 							if (tY < 0)
 								tY = 0;
-							img[sX + sY * width] = addColors(
-									mixColors(imgSrc[tX + tY * width], imgSrc[sX + sY * width], 1f), (int) (b * 0.75f));
+							img[sX + sY * width] = addColors(mixColors(imgSrc[tX + tY * width], imgSrc[sX + sY * width],
+									FANCY_FANCY ? 1f : 0.5f), (int) (b * (FANCY_FANCY ? 0.75f : 0.3f)));
 						}
 				}
 			}
@@ -111,15 +120,14 @@ public class TestFilter implements GraphicalFilterPlugin {
 		for (int x = 0; x < width / SPEED_FACTOR; x++)
 			for (int y = 0; y < height / SPEED_FACTOR; y++) {
 				offset[x][y] = 0;
-				blocked[x][y] = 0;
 			}
 	}
 
 	private float getGradient(int x, int y, int x2, int y2) {
 		if (x < 0 || y < 0 || x >= width / SPEED_FACTOR || y >= height / SPEED_FACTOR)
 			return 0;
-		if (blocked[x][y] == 1)
-			return 0;
+		if (blocked[x][y] < 1)
+			return (values[x][y] - values[x2][y2]) * (1 - blocked[x][y]);
 		return values[x][y] - values[x2][y2];
 	}
 
@@ -136,10 +144,10 @@ public class TestFilter implements GraphicalFilterPlugin {
 		for (int x = 0; x < width / SPEED_FACTOR; x++)
 			for (int y = 0; y < height / SPEED_FACTOR; y++) {
 				values[x][y] = values[x][y] * SUSTAIN - velocities[x][y] + offset[x][y];
-				if (values[x][y] < -1)
-					values[x][y] = -1;
-				if (values[x][y] > 1)
-					values[x][y] = 1;
+				if (values[x][y] < (FANCY_FANCY ? -1.5f : -0.75f))
+					values[x][y] = (FANCY_FANCY ? -1.5f : -0.75f);
+				if (values[x][y] > (FANCY_FANCY ? 1.5f : 0.75f))
+					values[x][y] = (FANCY_FANCY ? 1.5f : 0.75f);
 
 				/*
 				 * // This part makes the "fields" reset when they reach a specific velocity and
@@ -174,19 +182,28 @@ public class TestFilter implements GraphicalFilterPlugin {
 	int[] lastOffset;
 
 	@Override
+	public void onTileMoved(Model m, Tile tile, String id, int oldx, int oldy) {
+		shallRender = true;
+	}
+
+	boolean shallRender = false;
+
+	@Override
 	public void onFilter(Model m, GraphicalView view, int[] img, int width, int height) {
+		FANCY_FANCY = true;
 		if (this.width != width || this.height != height) {
 			this.width = width;
 			this.height = height;
-			initFields();
+			initFields(m, view);
 		}
 		clear();
 		String sel = m.getLevel().getSelected();
 		iterationsShown++;
-		if (sel != lastSelected) {
+		if (shallRender) {
+			shallRender = false;
 			iterationsShown = 0;
-			lastSelected = sel;
-			lastOffset = view.getSelectedOffset();
+			// lastSelected = sel;
+			// lastOffset = view.getSelectedOffset();
 		}
 		for (int column = 0; column < m.getLevel().getWidth(); column++)
 			for (int row = 0; row < m.getLevel().getHeight(); row++)

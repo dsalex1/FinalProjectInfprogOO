@@ -16,7 +16,8 @@ import schimmler.architecture.plugin.View;
 //fiddle for aminations: http://jsfiddle.net/q5Lc4fv2/38/
 //http://jsfiddle.net/90ze2yjh/1/
 @SuppressWarnings("serial")
-public class SchimmlerView extends JFrame implements GraphicalView, InputPlugin { // changed to JFrame to properly be able to add a keylistener to it
+public class SchimmlerView extends JFrame implements GraphicalView, InputPlugin { // changed to JFrame to properly be
+																					// able to add a keylistener to it
 
 	private static final int SUBPIXEL_COUNT = 20;
 	private static final int WIDTH = 28 * SUBPIXEL_COUNT;
@@ -25,7 +26,7 @@ public class SchimmlerView extends JFrame implements GraphicalView, InputPlugin 
 	private static final int TILE_WIDTH = 4 * SUBPIXEL_COUNT;
 	private static final int TILE_HEIGHT = 4 * SUBPIXEL_COUNT;
 
-	private static final int OFFSET_X = 2 * SUBPIXEL_COUNT;
+	private static final int OFFSET_X = 1 * SUBPIXEL_COUNT;
 	private static final int OFFSET_Y = 2 * SUBPIXEL_COUNT;
 
 	private BufferedImage currentFrame = null;
@@ -45,17 +46,17 @@ public class SchimmlerView extends JFrame implements GraphicalView, InputPlugin 
 		setVisible(true);
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		
+
 		View.update(m);
 	}
-	
+
 	@Override
-	public void paint(Graphics g) { // returned to paint because still double buffering and JFrame does not have a paintComponent method
+	public void paint(Graphics g) { // returned to paint because still double buffering and JFrame does not have a
+									// paintComponent method
 		if (currentFrame != null)
 			g.drawImage(currentFrame, 0, 0, this);
 	}
-	
+
 	@Override
 	public String getName() {
 		return "SchimmlerView";
@@ -90,7 +91,8 @@ public class SchimmlerView extends JFrame implements GraphicalView, InputPlugin 
 		}
 
 		// fill in playGround
-		fillGround(m, Color.gray, frame);
+		fillGround(m, Color.getHSBColor(0, 0, 0.2f), frame);
+		drawMenu(m, Color.gray, frame);
 
 		// render static tiles (those whuch are not selected)
 		for (String tile : m.getLevel().getTileMap().keySet()) {
@@ -98,6 +100,13 @@ public class SchimmlerView extends JFrame implements GraphicalView, InputPlugin 
 			if (m.getLevel().getSelected() != null && m.getLevel().getSelected().equals(tile))
 				continue;
 			drawTile(m, tile, color, frame);
+		}
+
+		for (String tile : m.getLevel().getTileMap().keySet()) {
+			Color color = colorMap.get(tile);
+			if (m.getLevel().getSelected() != null && m.getLevel().getSelected().equals(tile))
+				continue;
+			drawTileSmall(m, tile, color, frame);
 		}
 
 		// draw selected tile
@@ -133,12 +142,33 @@ public class SchimmlerView extends JFrame implements GraphicalView, InputPlugin 
 			}
 	}
 
+	private void drawTileSmall(Model m, String tile, Color color, BufferedImage img) {
+		Graphics2D g2d = img.createGraphics();
+		for (int column = 0; column < m.getLevel().getWidth(); column++)
+			for (int row = 0; row < m.getLevel().getHeight(); row++) {
+				String occp = m.getLevel().fieldOccupied(column, row);
+				if (occp != null && occp.equals(tile)) {
+					g2d.setColor(color);
+					g2d.fillRect(
+							(int) ((column + 0.5) * SUBPIXEL_COUNT * 2 + 2 * OFFSET_X
+									+ m.getLevel().getWidth() * TILE_WIDTH),
+							(row + 1) * SUBPIXEL_COUNT * 2, SUBPIXEL_COUNT * 2, SUBPIXEL_COUNT * 2);
+				}
+			}
+	}
+
 	private void fillGround(Model m, Color color, BufferedImage img) {
 		Graphics2D g2d = img.createGraphics();
 		g2d.setColor(color);
 		g2d.fillRect(OFFSET_X, OFFSET_Y, TILE_WIDTH * m.getLevel().getWidth(), TILE_HEIGHT * m.getLevel().getHeight());
 	}
 
+	private void drawMenu(Model m, Color color, BufferedImage img) {
+		Graphics2D g2d = img.createGraphics();
+		g2d.setColor(color);
+		g2d.fillRect(2 * OFFSET_X + TILE_WIDTH * m.getLevel().getWidth(), 0,
+				WIDTH - TILE_WIDTH * m.getLevel().getWidth() - 2 * OFFSET_X, HEIGHT);
+	}
 
 	@Override
 	public void onWon(Model m) {
@@ -168,6 +198,11 @@ public class SchimmlerView extends JFrame implements GraphicalView, InputPlugin 
 	@Override
 	public int[] getSelectedOffset() {
 		return this.selectedOffset;
+	}
+
+	@Override
+	public int getPlaygroundWidth(Model m) {
+		return 2 * OFFSET_X + TILE_WIDTH * m.getLevel().getWidth();
 	}
 
 	@Override

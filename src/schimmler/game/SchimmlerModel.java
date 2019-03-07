@@ -78,7 +78,7 @@ public class SchimmlerModel extends Model {
 			@Override
 			public void init(Model m, Level level) {
 				level.setWidth(4);
-				level.setHeight(7);
+				level.setHeight(6);
 				level.addTile("startGame", createTile("menuGreen", 0, 1));
 				level.addTile("openMenu", createTile("menuBlue", 0, 3));
 				level.addTile("exit", createTile("menuRed", 0, 5));
@@ -207,7 +207,7 @@ public class SchimmlerModel extends Model {
 		model.registerPlugin(new TestController());
 		model.registerPlugin(new TestFilter());
 		model.registerPlugin(new LightHousePlugin());
-		model.registerPlugin(new LightHouseOnlinePlugin());
+		// model.registerPlugin(new LightHouseOnlinePlugin());
 		model.start();
 	}
 
