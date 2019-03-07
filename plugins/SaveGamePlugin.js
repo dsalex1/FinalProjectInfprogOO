@@ -1,9 +1,22 @@
 (function () {
+	File = Java.type("java.io.File");
+	BufferedReader = Java.type("java.io.BufferedReader")
+	BufferedWriter = Java.type("java.io.BufferedWriter")
+	FileReader = Java.type("java.io.FileReader")
+	FileWriter = Java.type("java.io.FileWriter")
+	
 	var plugin = new (Java.extend(Plugin, KeyboardInputPlugin, {
 		init: function(model) {
+			this.file = new File(System.getProperty("user.dir")+File.separator+"save.dat");
 		},
 		onPluginsLoaded: function(model) {
-			this.save(model);
+			if(this.file.exists()) {
+				this.lastSave = loadFile();
+				this.load(model);
+			}else {
+				this.save(model);
+				this.saveFile(this.lastSave);
+			}
 		},
 		onKeyPressed: function(model, key, shift) {
 			if(key == "l".charCodeAt(0)) {
@@ -11,7 +24,19 @@
 			}
 			if(key == "s".charCodeAt(0)) {
 				this.save(model);
+				this.saveFile(this.lastSave);
 			}
+		},
+		loadFile: function() {
+			 reader = new BufferedReader(new FileReader(this.file));
+			 line = reader.readLine();
+			 reader.close();
+			 return line;
+		},
+		saveFile: function(content) {
+			 writer = new BufferedWriter(new FileWriter(this.file));
+			 writer.write(content);
+			 writer.close();
 		},
 		save: function(model) {
 			saveGame = {};
@@ -35,7 +60,7 @@
 			saveGame["selected"] = model.getLevel().getSelected();
 
 			this.lastSave = JSON.stringify(saveGame);
-			plugin.log(this.lastSave);
+			//plugin.log(this.lastSave);
 		},
 		load: function(model) {
 			saveGame = JSON.parse(this.lastSave);

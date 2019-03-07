@@ -2,6 +2,8 @@ package schimmler.game;
 
 import java.io.File;
 
+import lightHouseSimulator.LightHouseOnlinePlugin;
+import lightHouseSimulator.LightHousePlugin;
 import schimmler.architecture.Level;
 import schimmler.architecture.LevelType;
 import schimmler.architecture.MatrixTileType;
@@ -11,6 +13,7 @@ import schimmler.architecture.plugin.Plugin;
 import schimmler.architecture.plugin.View;
 import schimmler.jar.JarFilePluginLoader;
 import schimmler.js.JavaScriptPluginLoader;
+import schimmler.test.TestFilter;
 
 public class SchimmlerModel extends Model {
 
@@ -197,11 +200,12 @@ public class SchimmlerModel extends Model {
 
 	public static void main(String[] args) {
 		SchimmlerModel model = new SchimmlerModel();
-		loadPlugins(model, args);
-		//model.registerPlugin(new SchimmlerView());
-		//model.registerPlugin(new SchimmlerController());
-		//model.registerPlugin(new TestFilter());
-		//model.registerPlugin(new LightHousePlugin());
+		//loadPlugins(model, args);
+		model.registerPlugin(new SchimmlerView());
+		model.registerPlugin(new SchimmlerController());
+		model.registerPlugin(new TestFilter());
+		model.registerPlugin(new LightHousePlugin());
+		model.registerPlugin(new LightHouseOnlinePlugin());
 		model.start();
 	}
 
