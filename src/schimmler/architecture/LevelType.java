@@ -8,6 +8,18 @@ import java.util.Map.Entry;
  */
 public abstract class LevelType {
 
+	
+	public LevelType() {
+		init();
+	}
+	
+	/**
+	 * Init function called when creating the level type.
+	 */
+	public void init() {
+		
+	}
+	
 	/**
 	 * A method for initializing a level by placing the tiles and setting the width
 	 * and height.
@@ -21,7 +33,25 @@ public abstract class LevelType {
 	 * 
 	 * @return return if the level was completed correctly.
 	 */
-	public abstract boolean won(Level level);
+	public boolean won(Level level) {
+		Level wLevel = getWonLevel();
+		if(wLevel == null) return false;
+		for(Entry<String, Tile> e:wLevel.getTileMap().entrySet()) {
+			Tile t = level.getTile(e.getKey());
+			if(t == null) return false;
+			if(!t.getType().equals(e.getValue().getType())) return false;
+			if(t.getX() != e.getValue().getX()) return false;
+			if(t.getY() != e.getValue().getY()) return false;
+		}
+		return true;
+	}
+	
+	
+	/**
+	 * Return a version of the level when won, will be displayed.
+	 * @return the won level
+	 */
+	public abstract Level getWonLevel();
 	
 	/**
 	 * A method used for optional update events of a level.

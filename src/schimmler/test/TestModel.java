@@ -55,8 +55,11 @@ public class TestModel extends Model {
 			@Override
 			public boolean won(Level level) {
 				return false;
-				// return level.getTile("square").getX() != 1 || level.getTile("square").getY()
-				// != 1;
+			}
+			
+
+			public Level getWonLevel() {
+				return null;
 			}
 
 		});

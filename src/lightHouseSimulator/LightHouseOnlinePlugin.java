@@ -33,6 +33,8 @@ public class LightHouseOnlinePlugin implements GraphicalFilterPlugin {
 					move(m, "left");
 				if(button == (int)'\t')
 					tab(m);
+				if(button == 16) //shift
+					untab(m);
 			}
 
 			@Override
@@ -58,6 +60,25 @@ public class LightHouseOnlinePlugin implements GraphicalFilterPlugin {
 				if(model.getLevel().getSelected() != null)
 					InputPlugin.tileDeselected(model, model.getLevel().getTile(model.getLevel().getSelected()), model.getLevel().getSelected());
 				model.getLevel().setSelected(null);
+			}
+			
+			public void untab(Model model) {
+				if(model.getLevel() == null) return;
+
+				String lastTile = null;
+				for(Entry<String, Tile> entry: model.getLevel().getTileMap().entrySet()) {
+					if(model.getLevel().getSelected() != null && model.getLevel().getSelected().equals(entry.getKey())) {
+						InputPlugin.tileDeselected(model, entry.getValue(), entry.getKey());
+						model.getLevel().setSelected(lastTile);
+						if(lastTile != null)
+							InputPlugin.tileSelected(model, model.getLevel().getTile(lastTile), lastTile);
+						return;
+					}
+					lastTile = entry.getKey();
+				}
+				
+				model.getLevel().setSelected(lastTile);
+				InputPlugin.tileSelected(model, model.getLevel().getTile(lastTile), lastTile);
 			}
 			
 			
