@@ -2,6 +2,7 @@ package lightHouseSimulator;
 
 import java.io.IOException;
 
+import de.cau.infprogoo.lighthouse.ILighthouseInputListener;
 import de.cau.infprogoo.lighthouse.LighthouseAccount;
 import de.cau.infprogoo.lighthouse.LighthouseDisplay;
 
@@ -27,15 +28,17 @@ public class LightHouseBridge {
 		    e.printStackTrace();
 		    return false;
 		}
+		
 		return true;
 	}
 	
-	/**
-	 * Check whether a connection to the lighthouse is currently active.
-	 * @return whether a connection is there
-	 */
-	public boolean isConnected() {
-		return display != null && display.isConnected();
+	public void addKeyListener(ILighthouseInputListener listener) {
+		if(display == null) {
+			System.err.println("Display is not connected.");
+			return;
+		}
+		
+		display.addButtonListener(listener);
 	}
 	
 	/**

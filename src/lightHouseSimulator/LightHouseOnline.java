@@ -12,8 +12,12 @@ public class LightHouseOnline extends LightHouseSimulator {
 		bridge = new LightHouseBridge();
 		if(!bridge.login())
 			throw new RuntimeException("Loggin into Lighthouse failed.");
+		
 	}
 	
+	public LightHouseBridge getBridge() {
+		return bridge;
+	}
 	
 	@Override
 	public void render() {

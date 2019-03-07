@@ -13,6 +13,7 @@ import schimmler.architecture.plugin.Plugin;
 import schimmler.architecture.plugin.View;
 import schimmler.jar.JarFilePluginLoader;
 import schimmler.js.JavaScriptPluginLoader;
+import schimmler.test.TestController;
 import schimmler.test.TestFilter;
 
 public class SchimmlerModel extends Model {
@@ -203,6 +204,7 @@ public class SchimmlerModel extends Model {
 		//loadPlugins(model, args);
 		model.registerPlugin(new SchimmlerView());
 		model.registerPlugin(new SchimmlerController());
+		model.registerPlugin(new TestController());
 		model.registerPlugin(new TestFilter());
 		model.registerPlugin(new LightHousePlugin());
 		model.registerPlugin(new LightHouseOnlinePlugin());
