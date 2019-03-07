@@ -2,6 +2,7 @@ package schimmler.game;
 
 import schimmler.architecture.Level;
 import schimmler.architecture.LevelType;
+import schimmler.architecture.MatrixTileType;
 import schimmler.architecture.Model;
 import schimmler.architecture.Plugin;
 import schimmler.architecture.Tile;
@@ -116,11 +117,6 @@ public class SchimmlerModel extends Model {
 	private void registerSchimmler() {
 		registerTileType("square", new MatrixTileType() {
 			private int[][] geometry = { { 1, 1 }, { 1, 1 } };
-
-			@Override
-			public void init(Tile tile) {
-				tile.getData().put("color", "#007FFF");
-			}
 
 			@Override
 			public int[][] getGeometryMatrix() {

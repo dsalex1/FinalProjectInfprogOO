@@ -56,7 +56,7 @@ public abstract class Model {
 				try {
 					while (!Thread.interrupted()) {
 						View.update(Model.this);
-						Thread.sleep(1000 / 30);
+						Thread.sleep(1000 / 60);
 					}
 				} catch (InterruptedException e) {
 				}
@@ -70,7 +70,7 @@ public abstract class Model {
 	 */
 	protected void stop() {
 		try {
-			if (gameLoop != null && gameLoop.isAlive())  {
+			if (gameLoop != null && gameLoop.isAlive()) {
 				gameLoop.interrupt();
 			}
 		} catch (Exception e) {
@@ -94,6 +94,7 @@ public abstract class Model {
 	 */
 	public void setLevel(Level level) {
 		this.level = level;
+		Plugin.levelSet(this);
 	}
 
 	/**

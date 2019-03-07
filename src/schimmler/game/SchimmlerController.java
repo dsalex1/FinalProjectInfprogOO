@@ -31,7 +31,9 @@ public class SchimmlerController implements Plugin {
 					@Override
 					public void mouseReleased(MouseEvent e) {
 
-						//int[] dragEnd = ((GraphicalView) plugin).getLvlCoordAt(e.getX(), e.getY()); // not used anywhere, commented out to remove warning and to annotate it not being used anywhere
+						// int[] dragEnd = ((GraphicalView) plugin).getLvlCoordAt(e.getX(), e.getY());
+						// // not used anywhere, commented out to remove warning and to annotate it not
+						// being used anywhere
 
 						String name = model.getLevel().getSelected();
 
@@ -83,6 +85,8 @@ public class SchimmlerController implements Plugin {
 
 					@Override
 					public void mousePressed(MouseEvent e) {
+						// resset offset
+						((GraphicalView) plugin).setSelectedOffset(0, 0);
 						// find coordinates in the system of the model
 						dragStart = ((GraphicalView) plugin).getLvlCoordAt(e.getX(), e.getY());
 						dragMouseStart = new int[] { e.getX(), e.getY() };

@@ -117,12 +117,12 @@ public class SchimmlerView extends JPanel implements GraphicalView, InputPlugin 
 			Color color = colorMap.get(sel).darker().darker();
 			drawTile(m, sel, color, frame, selectedOffset[0], selectedOffset[1]);
 		}
-		
-		
+
 		// <GraphicalFilterCode>
-		GraphicalView.filter(m, ((DataBufferInt)frame.getRaster().getDataBuffer()).getData(), frame.getWidth(), frame.getHeight());
+		GraphicalView.filter(m, this, ((DataBufferInt) frame.getRaster().getDataBuffer()).getData(), frame.getWidth(),
+				frame.getHeight());
 		// </GraphicalFilterCode>
-		
+
 		return frame;
 
 	}
@@ -137,8 +137,8 @@ public class SchimmlerView extends JPanel implements GraphicalView, InputPlugin 
 			for (int row = 0; row < m.getLevel().getHeight(); row++)
 				if (m.getLevel().fieldOccupied(column, row) == tile) {
 					g2d.setColor(color);
-					g2d.fillRect(column * TILE_WIDTH + OFFSET_X + offsetX,
-							row * TILE_HEIGHT + OFFSET_Y + offsetY, TILE_WIDTH, TILE_HEIGHT);
+					g2d.fillRect(column * TILE_WIDTH + OFFSET_X + offsetX, row * TILE_HEIGHT + OFFSET_Y + offsetY,
+							TILE_WIDTH, TILE_HEIGHT);
 				}
 	}
 
@@ -178,5 +178,17 @@ public class SchimmlerView extends JPanel implements GraphicalView, InputPlugin 
 	 */
 	public void setSelectedOffset(int x, int y) {
 		this.selectedOffset = new int[] { x, y };
+	}
+
+	@Override
+	public int[] getSelectedOffset() {
+		return this.selectedOffset;
+	}
+
+	@Override
+	public int[] getCoordAtLvl(int row, int column) {
+		int x = column * TILE_WIDTH + OFFSET_X;
+		int y = row * TILE_HEIGHT + OFFSET_Y;
+		return new int[] { x, y };
 	}
 }
