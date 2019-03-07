@@ -102,12 +102,29 @@ public class SchimmlerView extends JFrame implements GraphicalView, InputPlugin 
 			drawTile(m, tile, color, frame);
 		}
 
-		for (String tile : m.getLevel().getTileMap().keySet()) {
-			Color color = colorMap.get(tile);
-			if (m.getLevel().getSelected() != null && m.getLevel().getSelected().equals(tile))
-				continue;
-			drawTileSmall(m, tile, color, frame);
+		colorMap = new HashMap<String, Color>();
+		i = '0';
+		for (String name : m.getLevel().getType().getWonLevel().getTileMap().keySet()) {
+			Map<String, String> tileData = m.getLevel().getType().getWonLevel().getTile(name).getData();
+			if (tileData.containsKey("color")) {
+				colorMap.put(name, Color.decode(tileData.get("color")));
+			} else {
+				colorMap.put(name, new Color(Color.HSBtoRGB(0.2f * i++, 1, 1f)));
+			}
 		}
+
+		if (m.getLevel().getType().getWonLevel() != null)
+			for (String tile : m.getLevel().getType().getWonLevel().getTileMap().keySet()) {
+				if (m.getLevel().getType().getWonLevel().getSelected() != null
+						&& m.getLevel().getType().getWonLevel().getSelected().equals(tile))
+					continue;
+				if (m.getLevel().getType().getWonLevel().getTile(tile).getData().get("color") != null)
+					drawTileSmall(m, tile, colorMap.get(tile), frame);
+				else
+					drawTileSmall(m, tile,
+							Color.decode(m.getLevel().getType().getWonLevel().getTile(tile).getData().get("color")),
+							frame);
+			}
 
 		// draw selected tile
 		String sel = m.getLevel().getSelected();
