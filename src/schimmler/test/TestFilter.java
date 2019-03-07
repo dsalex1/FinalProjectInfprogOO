@@ -15,7 +15,7 @@ public class TestFilter implements GraphicalFilterPlugin, InputPlugin {
 
 	float SUSTAIN = 0.995f;
 
-	int REFRACTION = 500;
+	int REFRACTION = 300;
 
 	int OVERHEAD_FLOW = 5;
 	int FRAMES_TO_SHOW = 1;
@@ -173,7 +173,7 @@ public class TestFilter implements GraphicalFilterPlugin, InputPlugin {
 
 	@Override
 	public void onLevelSet(Model m) {
-	//	log("level set");
+		// log("level set");
 	}
 
 	String lastSelected;
