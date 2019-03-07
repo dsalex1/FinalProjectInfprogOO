@@ -25,7 +25,7 @@ public class SchimmlerController implements Plugin {
 
 	@Override
 	public void onPluginsLoaded(Model model) {
-		// search for plugins which can have mouse listeners, here explicitly the
+		// search for plugins which can have mouse listeners and are pixel based views
 		List<Plugin> plugins = model.getPlugins();
 		for (Plugin plugin : plugins) {
 			if (plugin instanceof GraphicalView && plugin instanceof JFrame) { 
@@ -105,11 +105,13 @@ public class SchimmlerController implements Plugin {
 			// and deselect the tile
 			model.getLevel().setSelected(null);
 			InputPlugin.tileDeselected(model, tile, name);
-			((GraphicalView) plugin).setSelectedOffset(0,0); // reset offset to not have it displayed for the next tile
-		}
+			}
 
 		@Override
 		public void mousePressed(MouseEvent e) {
+			
+			((GraphicalView) plugin).setSelectedOffset(0,0); // reset offset to not have it displayed for the next tile
+			
 			// find coordinates in the system of the model
 			dragStart = ((GraphicalView) plugin).getLvlCoordAt(e.getX(), e.getY());
 			dragMouseStart = new int[] { e.getX(), e.getY() };

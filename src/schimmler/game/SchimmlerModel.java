@@ -2,6 +2,7 @@ package schimmler.game;
 
 import schimmler.architecture.Level;
 import schimmler.architecture.LevelType;
+import schimmler.architecture.MatrixTileType;
 import schimmler.architecture.Model;
 import schimmler.architecture.Plugin;
 import schimmler.architecture.Tile;
@@ -20,47 +21,52 @@ public class SchimmlerModel extends Model {
 		registerSchimmler();
 		setLevel(createLevel("menu"));
 	}
-	
+
 	private void registerMenu() {
-		
+
 		registerTileType("menuGreen", new MatrixTileType() {
-			private int[][] geometry = { { 1, 1 , 1} };
+			private int[][] geometry = { { 1, 1, 1 } };
+
 			@Override
 			public void init(Tile tile) {
 				tile.getData().put("color", "#00FF00");
 			}
+
 			@Override
 			public int[][] getGeometryMatrix() {
 				return geometry;
 			}
-			
+
 		});
-		
+
 		registerTileType("menuBlue", new MatrixTileType() {
-			private int[][] geometry = { { 1, 1 , 1} };
+			private int[][] geometry = { { 1, 1, 1 } };
+
 			@Override
 			public void init(Tile tile) {
 				tile.getData().put("color", "#0000FF");
 			}
+
 			@Override
 			public int[][] getGeometryMatrix() {
 				return geometry;
 			}
 		});
-		
+
 		registerTileType("menuRed", new MatrixTileType() {
-			private int[][] geometry = { { 1, 1 , 1} };
+			private int[][] geometry = { { 1, 1, 1 } };
+
 			@Override
 			public void init(Tile tile) {
 				tile.getData().put("color", "#FF0000");
 			}
+
 			@Override
 			public int[][] getGeometryMatrix() {
 				return geometry;
 			}
 		});
-		
-		
+
 		registerLevelType("menu", new LevelType() {
 			@Override
 			public void init(Model m, Level level) {
@@ -70,34 +76,34 @@ public class SchimmlerModel extends Model {
 				level.addTile("openMenu", createTile("menuBlue", 0, 3));
 				level.addTile("exit", createTile("menuRed", 0, 5));
 			}
-			
+
 			@Override
 			public boolean canTileMoveTo(Level level, String name, int x, int y) {
-				if(y != level.getTile(name).getY()) return false;
+				if (y != level.getTile(name).getY())
+					return false;
 				return super.canTileMoveTo(level, name, x, y);
 			}
-			
+
 			@Override
 			public void update(Model model, Level level) {
-				
-				if(level.getTile("startGame").getX() != 0) {
+
+				if (level.getTile("startGame").getX() != 0) {
 					model.setLevel(model.createLevel("schimmler"));
 					View.update(model);
 					return;
 				}
-				
-				if(level.getTile("openMenu").getX() != 0) {
-				//	model.setLevel(model.createLevel("levelSelect"));
-				//	View.update(model);
-				//	return;
+
+				if (level.getTile("openMenu").getX() != 0) {
+					// model.setLevel(model.createLevel("levelSelect"));
+					// View.update(model);
+					// return;
 				}
-			
-				if(level.getTile("exit").getX() != 0) {
+
+				if (level.getTile("exit").getX() != 0) {
 					Plugin.kill(model);
 					System.exit(0);
-				}	
-				
-				
+				}
+
 			}
 
 			@Override
@@ -107,21 +113,19 @@ public class SchimmlerModel extends Model {
 
 		});
 	}
-	
+
 	private void registerSchimmler() {
 		registerTileType("square", new MatrixTileType() {
 			private int[][] geometry = { { 1, 1 }, { 1, 1 } };
-			@Override
-			public void init(Tile tile) {
-				tile.getData().put("color", "#007FFF");
-			}
+
 			@Override
 			public int[][] getGeometryMatrix() {
 				return geometry;
 			}
 		});
 		registerTileType("hookUL", new MatrixTileType() {
-			private 				int[][] geometry = { { 1, 1 }, { 1, 0 } };
+			private int[][] geometry = { { 1, 1 }, { 1, 0 } };
+
 			@Override
 			public int[][] getGeometryMatrix() {
 				return geometry;
@@ -130,6 +134,7 @@ public class SchimmlerModel extends Model {
 
 		registerTileType("hookUR", new MatrixTileType() {
 			private int[][] geometry = { { 1, 1 }, { 0, 1 } };
+
 			@Override
 			public int[][] getGeometryMatrix() {
 				return geometry;
@@ -138,6 +143,7 @@ public class SchimmlerModel extends Model {
 
 		registerTileType("hookBL", new MatrixTileType() {
 			private int[][] geometry = { { 1, 0 }, { 1, 1 } };
+
 			@Override
 			public int[][] getGeometryMatrix() {
 				return geometry;
@@ -146,6 +152,7 @@ public class SchimmlerModel extends Model {
 
 		registerTileType("hookBR", new MatrixTileType() {
 			private int[][] geometry = { { 0, 1 }, { 1, 1 } };
+
 			@Override
 			public int[][] getGeometryMatrix() {
 				return geometry;
