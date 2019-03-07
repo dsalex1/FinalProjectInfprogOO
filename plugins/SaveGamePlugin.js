@@ -9,17 +9,13 @@
 		init: function(model) {
 			this.file = new File(System.getProperty("user.dir")+File.separator+"save.dat");
 		},
-		onPluginsLoaded: function(model) {
-			if(this.file.exists()) {
-				this.lastSave = loadFile();
-				this.load(model);
-			}else {
-				this.save(model);
-				this.saveFile(this.lastSave);
-			}
-		},
 		onKeyPressed: function(model, key, shift) {
 			if(key == "l".charCodeAt(0)) {
+				if(!this.file.exists()) {
+					plugin.log("No save file found.");
+					return;
+				}
+				this.lastSave = this.loadFile();
 				this.load(model);
 			}
 			if(key == "s".charCodeAt(0)) {
