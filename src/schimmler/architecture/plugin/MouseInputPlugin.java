@@ -1,4 +1,6 @@
-package schimmler.architecture;
+package schimmler.architecture.plugin;
+
+import schimmler.architecture.Model;
 
 /**  An interface for plugins that want to listen to direct mouse input from the user.*/
 public interface MouseInputPlugin extends Plugin {

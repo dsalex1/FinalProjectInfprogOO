@@ -8,13 +8,13 @@ import java.awt.event.MouseMotionListener;
 import java.util.List;
 import javax.swing.JFrame;
 
-import schimmler.architecture.GraphicalView;
-import schimmler.architecture.InputPlugin;
-import schimmler.architecture.KeyboardInputPlugin;
 import schimmler.architecture.Model;
-import schimmler.architecture.MouseInputPlugin;
-import schimmler.architecture.Plugin;
 import schimmler.architecture.Tile;
+import schimmler.architecture.plugin.GraphicalView;
+import schimmler.architecture.plugin.InputPlugin;
+import schimmler.architecture.plugin.KeyboardInputPlugin;
+import schimmler.architecture.plugin.MouseInputPlugin;
+import schimmler.architecture.plugin.Plugin;
 
 public class SchimmlerController implements Plugin {
 

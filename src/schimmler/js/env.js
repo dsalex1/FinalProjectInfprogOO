@@ -5,6 +5,7 @@ load("nashorn:mozilla_compat.js");
 
 // load all classes of the architecture sub-package into the global scope
 importPackage("schimmler.architecture")
+importPackage("schimmler.architecture.plugin")
 
 // load the java.lang defaults into the global scope
 importPackage("java.lang")

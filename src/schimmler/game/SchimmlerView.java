@@ -3,27 +3,21 @@ package schimmler.game;
 import java.util.HashMap;
 import java.util.Map;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 
-import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 
-import lightHouseSimulator.LightHouseSimulator;
-import schimmler.architecture.InputPlugin;
 import schimmler.architecture.Model;
-import schimmler.architecture.GraphicalView;
-import schimmler.architecture.View;
+import schimmler.architecture.plugin.GraphicalView;
+import schimmler.architecture.plugin.InputPlugin;
+import schimmler.architecture.plugin.View;
 
 //fiddle for aminations: http://jsfiddle.net/q5Lc4fv2/38/
 //http://jsfiddle.net/90ze2yjh/1/
 @SuppressWarnings("serial")
 public class SchimmlerView extends JFrame implements GraphicalView, InputPlugin { // changed to JFrame to properly be able to add a keylistener to it
 
-	private static final Boolean SHOW_LIGHTHOUSE = true;
 	private static final int SUBPIXEL_COUNT = 20;
 	private static final int WIDTH = 28 * SUBPIXEL_COUNT;
 	private static final int HEIGHT = 14 * 2 * SUBPIXEL_COUNT;
@@ -35,10 +29,6 @@ public class SchimmlerView extends JFrame implements GraphicalView, InputPlugin 
 	private static final int OFFSET_Y = 2 * SUBPIXEL_COUNT;
 
 	private BufferedImage currentFrame = null;
-
-	private JFrame window = null;
-
-	private LightHouseSimulator lightHouse;
 
 	public SchimmlerView() {
 		super();
@@ -55,11 +45,6 @@ public class SchimmlerView extends JFrame implements GraphicalView, InputPlugin 
 		setVisible(true);
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		if (SHOW_LIGHTHOUSE) {
-			lightHouse = new LightHouseSimulator();
-			lightHouse.setGapsRatio(1, 0);
-		}
 		
 		
 		View.update(m);
@@ -79,10 +64,6 @@ public class SchimmlerView extends JFrame implements GraphicalView, InputPlugin 
 	@Override
 	public void onUpdate(Model m) {
 		currentFrame = render(m);
-
-		if (SHOW_LIGHTHOUSE) {
-			lightHouse.setData(currentFrame);
-		}
 
 		this.repaint();
 

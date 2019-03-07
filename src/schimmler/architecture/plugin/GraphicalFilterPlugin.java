@@ -1,8 +1,18 @@
-package schimmler.architecture;
+package schimmler.architecture.plugin;
+
+import schimmler.architecture.Model;
 
 /** A Plugin Type for changing the image rendered by a GraphicalView. */
 public interface GraphicalFilterPlugin extends Plugin {
 
+	public static final int PRIORITY_FIRST = 0;
+	public static final int PRIORITY_EARLIER = 1;
+	public static final int PRIORITY_NORMAL = 2;
+	public static final int PRIORITY_LATER = 3;
+	public static final int PRIORITY_LAST = 4;
+	public static final int PRIORITY_AMOUNT = 5;
+	
+	
 	/**
 	 * Event for filtering a given array of RGB values.
 	 * 
@@ -33,7 +43,7 @@ public interface GraphicalFilterPlugin extends Plugin {
 	 * @param priority the priority to check
 	 */
 	default public boolean shouldFilter(int priority) {
-		return priority == 2;
+		return priority == PRIORITY_NORMAL;
 	}
 
 	/**

@@ -1,4 +1,7 @@
-package schimmler.architecture;
+package schimmler.architecture.plugin;
+
+import schimmler.architecture.Model;
+import schimmler.architecture.Tile;
 
 /**
  * An interface for plugins that want to listen to filtered user input related to interaction with the model.

@@ -11,8 +11,8 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.jar.JarFile;
 
-import schimmler.architecture.Plugin;
 import schimmler.architecture.PluginLoader;
+import schimmler.architecture.plugin.Plugin;
 
 /**
  * A plugin loader for plugins in the Jar File Format.

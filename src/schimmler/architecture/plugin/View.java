@@ -1,4 +1,6 @@
-package schimmler.architecture;
+package schimmler.architecture.plugin;
+
+import schimmler.architecture.Model;
 
 /** A specific plugin meant to only display data to the end user. */
 public interface View extends Plugin {

@@ -2,6 +2,8 @@ package schimmler.architecture;
 
 import java.util.List;
 
+import schimmler.architecture.plugin.Plugin;
+
 /** An abstract class for custom loaders of plugins that not directly known at compile-tile. */
 public abstract class PluginLoader {
 	

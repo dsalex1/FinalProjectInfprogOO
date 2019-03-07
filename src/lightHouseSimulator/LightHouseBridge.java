@@ -8,7 +8,7 @@ import de.cau.infprogoo.lighthouse.LighthouseDisplay;
 /**
  * Bridge between the LightHouseSimulator and the CAU LighthouseDisplay.
  */
-public class LightHouseHandler {
+public class LightHouseBridge {
 	
 	/** The display instance associated with this handler. */
 	private LighthouseDisplay display;

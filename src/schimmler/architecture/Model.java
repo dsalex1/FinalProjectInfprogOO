@@ -3,6 +3,10 @@ package schimmler.architecture;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import schimmler.architecture.plugin.Plugin;
+import schimmler.architecture.plugin.View;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -68,7 +72,7 @@ public abstract class Model {
 	/**
 	 * A method meant to be executed when the kill event has been triggered.
 	 */
-	protected void stop() {
+	public void stop() {
 		try {
 			if (gameLoop != null && gameLoop.isAlive()) {
 				gameLoop.interrupt();

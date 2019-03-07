@@ -2,10 +2,10 @@ package schimmler.test;
 
 import java.util.HashMap;
 
-import schimmler.architecture.InputPlugin;
 import schimmler.architecture.Model;
 import schimmler.architecture.Tile;
-import schimmler.architecture.View;
+import schimmler.architecture.plugin.InputPlugin;
+import schimmler.architecture.plugin.View;
 
 public class TestView implements View, InputPlugin {
 

@@ -1,4 +1,6 @@
-package schimmler.architecture;
+package schimmler.architecture.plugin;
+
+import schimmler.architecture.Model;
 
 /**
  * A specific plugin meant to only display data graphically, pixel based, to the
@@ -23,7 +25,7 @@ public interface GraphicalView extends View {
 	 * @param height the height of the image
 	 */
 	public static void filter(Model model, GraphicalView view, int[] img, int width, int height) {
-		for (int i = 0; i < 5; i++)
+		for (int i = 0; i < GraphicalFilterPlugin.PRIORITY_AMOUNT; i++)
 			GraphicalFilterPlugin.filter(model, view, img, width, height, i);
 	}
 

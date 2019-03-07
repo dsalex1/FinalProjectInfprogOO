@@ -1,12 +1,13 @@
 package schimmler.game;
 
+import lightHouseSimulator.LightHousePlugin;
 import schimmler.architecture.Level;
 import schimmler.architecture.LevelType;
 import schimmler.architecture.MatrixTileType;
 import schimmler.architecture.Model;
-import schimmler.architecture.Plugin;
 import schimmler.architecture.Tile;
-import schimmler.architecture.View;
+import schimmler.architecture.plugin.Plugin;
+import schimmler.architecture.plugin.View;
 import schimmler.test.TestFilter;
 
 public class SchimmlerModel extends Model {
@@ -184,6 +185,7 @@ public class SchimmlerModel extends Model {
 		model.registerPlugin(new SchimmlerView());
 		model.registerPlugin(new SchimmlerController());
 		model.registerPlugin(new TestFilter());
+		model.registerPlugin(new LightHousePlugin());
 		model.start();
 	}
 

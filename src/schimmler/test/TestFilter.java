@@ -1,8 +1,8 @@
 package schimmler.test;
 
-import schimmler.architecture.GraphicalFilterPlugin;
-import schimmler.architecture.GraphicalView;
 import schimmler.architecture.Model;
+import schimmler.architecture.plugin.GraphicalFilterPlugin;
+import schimmler.architecture.plugin.GraphicalView;
 
 public class TestFilter implements GraphicalFilterPlugin {
 
@@ -49,21 +49,25 @@ public class TestFilter implements GraphicalFilterPlugin {
 		for (int x = 0; x < width / SPEED_FACTOR; x++) {
 			for (int y = 0; y < height / SPEED_FACTOR; y++) {
 				if (blocked[x][y] == 1) {
-					for (int i = 0; i < SPEED_FACTOR; i++)
-						for (int j = 0; j < SPEED_FACTOR; j++)
-							img[(x * SPEED_FACTOR + i) + (y * SPEED_FACTOR + j) * width] = 0xFFFFFF;
+					//for (int i = 0; i < SPEED_FACTOR; i++)
+					//	for (int j = 0; j < SPEED_FACTOR; j++)
+					//		img[(x * SPEED_FACTOR + i) + (y * SPEED_FACTOR + j) * width] = 0xFFFFFF;
 					continue;
 				}
-				float dX, dY;
-
-				if (x < width / SPEED_FACTOR - 1)
-					dX = values[x][y] - values[x + 1][y];
-				else
-					dX = 0;
-				if (y < height / SPEED_FACTOR - 1)
-					dY = values[x][y] - values[x][y + 1];
-				else
-					dY = 0;
+				
+				/*
+				 * Commented out because not used.
+					float dX, dY;
+					if (x < width / SPEED_FACTOR - 1)
+						dX = values[x][y] - values[x + 1][y];
+					else
+						dX = 0;
+					if (y < height / SPEED_FACTOR - 1)
+						dY = values[x][y] - values[x][y + 1];
+					else
+						dY = 0;
+				*/
+				
 				// bg=getPixelXY(x+parseInt(dX*20), y+parseInt(dY*20))
 				if (values[x][y] >= 0) {
 					int b = (int) (values[x][y] * 255);
@@ -119,6 +123,15 @@ public class TestFilter implements GraphicalFilterPlugin {
 					values[x][y] = -1;
 				if (values[x][y] > 1)
 					values[x][y] = 1;
+				
+				// This part makes the "fields" reset when they reach a specific velocity and value
+				// This is needed to prevent idle tiles that (because of their low velocity) loose color way too slow (thus tint the whole screen blue)
+				// These parameters need adjusting for more optimal results. 
+				if(Math.abs(velocities[x][y]) != 0 && Math.abs(velocities[x][y]) < 0.005 && values[x][y] != 0.0 && Math.abs(values[x][y]) < 1.0) {
+					values[x][y]=0;
+					velocities[x][y]=0;
+				}
+				
 			}
 	}
 

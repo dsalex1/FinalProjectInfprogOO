@@ -1,4 +1,6 @@
-package schimmler.architecture;
+package schimmler.architecture.plugin;
+
+import schimmler.architecture.Model;
 
 /**  An interface for plugins that want to listen to direct keyboard input from the user.*/
 public interface KeyboardInputPlugin extends Plugin {

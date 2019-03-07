@@ -8,8 +8,9 @@ import java.util.List;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
-import schimmler.architecture.Plugin;
+
 import schimmler.architecture.PluginLoader;
+import schimmler.architecture.plugin.Plugin;
 
 /**
  * A plugin loader for plugins written in JavaScript that are compatible with

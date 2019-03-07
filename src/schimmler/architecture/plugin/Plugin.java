@@ -1,7 +1,9 @@
-package schimmler.architecture;
+package schimmler.architecture.plugin;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
+import schimmler.architecture.Model;
 
 /**
  * A plugin is an optional addition to an existing Model that may act on events

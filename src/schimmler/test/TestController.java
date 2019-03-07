@@ -3,11 +3,11 @@ package schimmler.test;
 import java.util.Map.Entry;
 import java.util.Scanner;
 
-import schimmler.architecture.InputPlugin;
-import schimmler.architecture.KeyboardInputPlugin;
 import schimmler.architecture.Model;
-import schimmler.architecture.Plugin;
 import schimmler.architecture.Tile;
+import schimmler.architecture.plugin.InputPlugin;
+import schimmler.architecture.plugin.KeyboardInputPlugin;
+import schimmler.architecture.plugin.Plugin;
 
 public class TestController implements Plugin {
 
