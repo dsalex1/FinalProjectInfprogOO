@@ -7,7 +7,6 @@ import java.awt.image.ColorModel;
 import java.awt.image.DataBufferInt;
 import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
-import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -55,13 +54,13 @@ public class LightHouseSimulator extends JPanel {
 	
 	protected void init() {
 		try {
-			backgroundImage = ImageIO.read(new File(getClass().getResource("background.png").getFile()));
+			backgroundImage = ImageIO.read(getClass().getResourceAsStream("background.png")); // changed to work with streams instead of files to work from a jar file
 
 			currentImg = new BufferedImage(backgroundImage.getWidth(), backgroundImage.getHeight(),
 					BufferedImage.TYPE_INT_ARGB);
-			redOverlay = ImageIO.read(new File(getClass().getResource("red.png").getFile()));
-			greenOverlay = ImageIO.read(new File(getClass().getResource("green.png").getFile()));
-			blueOverlay = ImageIO.read(new File(getClass().getResource("blue.png").getFile()));
+			redOverlay = ImageIO.read(getClass().getResourceAsStream("red.png"));
+			greenOverlay = ImageIO.read(getClass().getResourceAsStream("green.png"));
+			blueOverlay = ImageIO.read(getClass().getResourceAsStream("blue.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

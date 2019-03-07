@@ -1,6 +1,7 @@
 package schimmler.game;
 
-import lightHouseSimulator.LightHousePlugin;
+import java.io.File;
+
 import schimmler.architecture.Level;
 import schimmler.architecture.LevelType;
 import schimmler.architecture.MatrixTileType;
@@ -8,7 +9,8 @@ import schimmler.architecture.Model;
 import schimmler.architecture.Tile;
 import schimmler.architecture.plugin.Plugin;
 import schimmler.architecture.plugin.View;
-import schimmler.test.TestFilter;
+import schimmler.jar.JarFilePluginLoader;
+import schimmler.js.JavaScriptPluginLoader;
 
 public class SchimmlerModel extends Model {
 
@@ -179,13 +181,27 @@ public class SchimmlerModel extends Model {
 
 		});
 	}
+	
+	public static void loadPlugins(Model model, String[] args) {
+		String folderName = "plugins";
+		if(args.length >= 1)
+			folderName = args[0];
+		
+		String path = System.getProperty("user.dir")+File.separatorChar+folderName+File.separatorChar;
+		
+		System.out.println(path);
+		
+		model.loadPlugins(new JavaScriptPluginLoader(new File(path)));
+		model.loadPlugins(new JarFilePluginLoader(new File(path)));
+	}
 
 	public static void main(String[] args) {
 		SchimmlerModel model = new SchimmlerModel();
-		model.registerPlugin(new SchimmlerView());
-		model.registerPlugin(new SchimmlerController());
-		model.registerPlugin(new TestFilter());
-		model.registerPlugin(new LightHousePlugin());
+		loadPlugins(model, args);
+		//model.registerPlugin(new SchimmlerView());
+		//model.registerPlugin(new SchimmlerController());
+		//model.registerPlugin(new TestFilter());
+		//model.registerPlugin(new LightHousePlugin());
 		model.start();
 	}
 

@@ -3,6 +3,8 @@ package schimmler.js;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,7 +47,9 @@ public class JavaScriptPluginLoader extends PluginLoader {
 
 		try {
 			// load the env.js as the first script into the script engine and evaluate it
-			scriptEngine.eval(new FileReader(new File(JavaScriptPluginLoader.class.getResource("env.js").toURI())));
+			InputStream is = JavaScriptPluginLoader.class.getResourceAsStream("env.js");
+			scriptEngine.eval(new InputStreamReader(is)); // needed to be changed to actually work as an exported JAR File
+			is.close();
 
 			File[] files = searchFolder.listFiles(new FileFilter() {
 				public boolean accept(File file) {
