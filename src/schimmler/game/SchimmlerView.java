@@ -3,8 +3,12 @@ package schimmler.game;
 import java.util.HashMap;
 import java.util.Map;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
+
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -17,7 +21,7 @@ import schimmler.architecture.View;
 //fiddle for aminations: http://jsfiddle.net/q5Lc4fv2/38/
 //http://jsfiddle.net/90ze2yjh/1/
 @SuppressWarnings("serial")
-public class SchimmlerView extends JPanel implements GraphicalView, InputPlugin {
+public class SchimmlerView extends JFrame implements GraphicalView, InputPlugin { // changed to JFrame to properly be able to add a keylistener to it
 
 	private static final Boolean SHOW_LIGHTHOUSE = true;
 	private static final int SUBPIXEL_COUNT = 20;
@@ -47,22 +51,26 @@ public class SchimmlerView extends JPanel implements GraphicalView, InputPlugin 
 
 	@Override
 	public void init(Model m) {
-		window = new JFrame();
-		window.setSize(WIDTH, HEIGHT + window.getInsets().top - 2);
-		window.setVisible(true);
-		window.add(this);
-
-		window.setResizable(false);
-		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+		setSize(WIDTH, HEIGHT + getInsets().top - 2);
+		setVisible(true);
+		setResizable(false);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
 		if (SHOW_LIGHTHOUSE) {
 			lightHouse = new LightHouseSimulator();
 			lightHouse.setGapsRatio(1, 0);
 		}
-
+		
+		
 		View.update(m);
 	}
-
+	
+	@Override
+	public void paint(Graphics g) { // returned to paint because still double buffering and JFrame does not have a paintComponent method
+		if (currentFrame != null)
+			g.drawImage(currentFrame, 0, 0, this);
+	}
+	
 	@Override
 	public String getName() {
 		return "SchimmlerView";
@@ -148,12 +156,6 @@ public class SchimmlerView extends JPanel implements GraphicalView, InputPlugin 
 		g2d.fillRect(OFFSET_X, OFFSET_Y, TILE_WIDTH * m.getLevel().getWidth(), TILE_HEIGHT * m.getLevel().getHeight());
 	}
 
-	@Override
-	public void paintComponent(Graphics g) {
-		super.paintComponent(g);
-		if (currentFrame != null)
-			g.drawImage(currentFrame, 0, 0, this);
-	}
 
 	@Override
 	public void onWon(Model m) {
@@ -179,4 +181,5 @@ public class SchimmlerView extends JPanel implements GraphicalView, InputPlugin 
 	public void setSelectedOffset(int x, int y) {
 		this.selectedOffset = new int[] { x, y };
 	}
+
 }

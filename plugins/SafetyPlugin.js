@@ -3,14 +3,41 @@
 		init: function(model) {
 		},
 		onTileSelected: function(model, tile, id) {
+			if(model.getLevel() == null) return;
+			lvl = model.getLevel();
+			this.checkState(model, lvl);
+			for(i=1;i<lvl.getWidth();i++) {
+				if(lvl.canTileMoveTo(id, tile.getX()+i, tile.getY())) {
+					nextLvl = lvl.clone();
+					nextLvl.setTilePositionInternal(id, tile.getX()+i, tile.getY());
+					this.checkState(model, nextLvl);
+				}
+				if(lvl.canTileMoveTo(id, tile.getX()-i, tile.getY())) {
+					nextLvl = lvl.clone();
+					nextLvl.setTilePositionInternal(id, tile.getX()-i, tile.getY());
+					this.checkState(model, nextLvl);
+				}
+			}
+			for(i=1;i<lvl.getHeight();i++) {
+				if(lvl.canTileMoveTo(id, tile.getX(), tile.getY()+i)) {
+					nextLvl = lvl.clone();
+					nextLvl.setTilePositionInternal(id, tile.getX(), tile.getY()+i);
+					this.checkState(model, nextLvl);
+				}
+				if(lvl.canTileMoveTo(id, tile.getX(), tile.getY()-i)) {
+					nextLvl = lvl.clone();
+					nextLvl.setTilePositionInternal(id, tile.getX(), tile.getY()-i);
+					this.checkState(model, nextLvl);
+				}
+			}
 		},
 		onTileDeselected: function(model, tile, id) {
 		},
-		onTileMoved: function(model, tile, id, oldx, oldy) {
-			res = this.lvlToString(model.getLevel())
+		checkState: function(model, level) {
+			res = this.lvlToString(level)
 			if(res.indexOf("XX X\n XXX\nXXX \nX XX") != -1 || res.indexOf("X XX\nXXX \n XXX\nXX X") != -1) { 
-				for each(e in model.getLevel().getTileMap().entrySet()) {
-					model.getLevel().setTilePositionInternal(e.getKey(), 0, 0); /* Set all tiles to 0, 0 to reset all screens */
+				for each(e in level.getTileMap().entrySet()) {
+					level.setTilePositionInternal(e.getKey(), 0, 0); // Set all tiles to 0, 0 to reset all screens
 				}
 				View.update(model);
 				plugin.log("Emergency Shutdown!")

@@ -7,6 +7,8 @@ import schimmler.architecture.LevelType;
 import schimmler.architecture.Model;
 import schimmler.architecture.Tile;
 import schimmler.architecture.TileType;
+import schimmler.game.SchimmlerController;
+import schimmler.game.SchimmlerView;
 import schimmler.jar.JarFilePluginLoader;
 import schimmler.js.JavaScriptPluginLoader;
 
@@ -43,10 +45,7 @@ public class TestModel extends Model {
 				level.addTile("square", createTile("square", 0, 0));
 				level.addTile("square2", createTile("square", 1, 1));
 				level.addTile("square3", createTile("square", 1, 0));
-				
-				level.addTile("square4", createTile("square", 3, 0));
-				level.addTile("square5", createTile("square", 3, 1));
-				level.addTile("square6", createTile("square", 2, 1));
+
 				
 				level.addTile("square7", createTile("square", 3, 2));
 				level.addTile("square8", createTile("square", 3, 3));
@@ -68,8 +67,8 @@ public class TestModel extends Model {
 
 	public static void main(String[] args) {
 		TestModel model = new TestModel();
-		model.registerPlugin(new TestView());
-		model.registerPlugin(new TestController());
+		model.registerPlugin(new SchimmlerView());
+		model.registerPlugin(new SchimmlerController());
 		model.loadPlugins(new JavaScriptPluginLoader(new File(System.getProperty("user.dir") + "/plugins/")));
 		model.loadPlugins(new JarFilePluginLoader(new File(System.getProperty("user.dir") + "/plugins/")));
 		System.out.println(model.getPlugins());

@@ -1,17 +1,17 @@
 (function () {
-	var plugin = new (Java.extend(Plugin, InputPlugin, {
+	var plugin = new (Java.extend(Plugin, KeyboardInputPlugin, {
 		init: function(model) {
 		},
-		onTileSelected: function(model, tile, id) {
+		onPluginsLoaded: function(model) {
 			this.save(model);
 		},
-		onTileDeselected: function(model, tile, id) {
-			//this.load(model);
-		},
-		onTileMoved: function(model, tile, id, oldx, oldy) {
-			//if(oldx != tile.getX() || oldy != tile.getY()) {
-			//	this.save(model);
-			//}
+		onKeyPressed: function(model, key, shift) {
+			if(key == "l".charCodeAt(0)) {
+				this.load(model);
+			}
+			if(key == "s".charCodeAt(0)) {
+				this.save(model);
+			}
 		},
 		save: function(model) {
 			saveGame = {};
@@ -55,7 +55,7 @@
 			level.setSelected(null);
 			model.setLevel(level);
 			//InputPlugin.tileMoved(model, level.getTile(level.getSelected()), level.getSelected(), level.getTile(level.getSelected()).getX(), level.getTile(level.getSelected()).getY());
-			View.update(model);
+			//View.update(model);
 		},
 		getName: function() { return "SaveGamePlugin" },
 	}))();

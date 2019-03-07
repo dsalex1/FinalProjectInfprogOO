@@ -4,6 +4,7 @@ import java.util.Map.Entry;
 import java.util.Scanner;
 
 import schimmler.architecture.InputPlugin;
+import schimmler.architecture.KeyboardInputPlugin;
 import schimmler.architecture.Model;
 import schimmler.architecture.Plugin;
 import schimmler.architecture.Tile;
@@ -154,6 +155,9 @@ public class TestController implements Plugin {
 					} else if (line.matches("(i?)^exit$")) {
 						System.out.println("Exiting...");
 						break;
+					} else if(line.length() == 1) {
+						KeyboardInputPlugin.keyPressed(m, Character.toLowerCase(line.charAt(0)), Character.isUpperCase(line.charAt(0)));
+						KeyboardInputPlugin.keyReleased(m, Character.toLowerCase(line.charAt(0)), Character.isUpperCase(line.charAt(0)));
 					} else {
 						System.out.println("?");
 					}

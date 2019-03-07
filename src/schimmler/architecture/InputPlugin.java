@@ -1,32 +1,10 @@
 package schimmler.architecture;
 
 /**
- * An interface for plugins that want to listen to direct user input of any
- * kind.
+ * An interface for plugins that want to listen to filtered user input related to interaction with the model.
  */
 public interface InputPlugin extends Plugin {
-	/**
-	 * Event for cursor movement.
-	 * 
-	 * @param m the model this event is called from
-	 * @param x the x position of the cursor
-	 * @param y the y position of the cursor
-	 */
-	default public void onCursorMove(Model m, int x, int y) {
-	}
 
-	/**
-	 * Call the {@link #onCursorMove(Model,int,int)} event for all plugins that
-	 * subscribed to it.
-	 * 
-	 * @param m the model this event is called from.
-	 * @param x the x position of the cursor
-	 * @param y the y position of the cursor
-	 */
-	public static void cursorMove(Model m, int x, int y) {
-		m.call("onCursorMove", InputPlugin.class, new Class[] { Model.class, int.class, int.class },
-				new Object[] { m, x, y });
-	}
 
 	/**
 	 * Event for the selection of a tile in a level. Tiles need to be selected
